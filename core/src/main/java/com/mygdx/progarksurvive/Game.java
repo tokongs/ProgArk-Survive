@@ -1,4 +1,4 @@
-package com.mygdx.progarksurvive;
+package main.java.com.mygdx.progarksurvive.progarksurvive;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;

@@ -19,7 +19,7 @@ android {
         exclude 'META-INF/robovm/ios/robovm.xml'
     }
     defaultConfig {
-        applicationId "com.mygdx.progarksurvive"
+        applicationId "main.java.com.mygdx.progarksurvive.progarksurvive"
         minSdkVersion 14
         targetSdkVersion 30
         versionCode 1
@@ -88,7 +88,7 @@ task run(type: Exec) {
     }
 
     def adb = path + "/platform-tools/adb"
-    commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.progarksurvive/com.mygdx.progarksurvive.AndroidLauncher'
+    commandLine "$adb", 'shell', 'am', 'start', '-n', 'main.java.com.mygdx.progarksurvive.progarksurvive/main.java.com.mygdx.progarksurvive.progarksurvive.AndroidLauncher'
 }
 
 eclipse.project.name = appName + "-android"
