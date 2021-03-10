@@ -1,4 +1,4 @@
-package main.java.com.mygdx.progarksurvive.progarksurvive.screen;
+package com.mygdx.progarksurvive.screen;
 
 import com.badlogic.gdx.Screen;
 
