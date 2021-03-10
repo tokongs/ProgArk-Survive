@@ -1,10 +1,9 @@
-package com.mygdx.progarksurvive;
+package main.java.com.mygdx.progarksurvive.progarksurvive;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.mygdx.progarksurvive.Game;
 
 public class AndroidLauncher extends AndroidApplication {
 	@Override
