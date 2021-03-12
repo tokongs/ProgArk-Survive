@@ -10,7 +10,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.4'
+        classpath 'com.android.tools.build:gradle:4.0.0'
         
 
     }
@@ -37,6 +37,8 @@ allprojects {
         google()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url 'https://jitpack.io' }
+
     }
 }
 
@@ -81,6 +83,9 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+
+        implementation "com.github.EsotericSoftware:kryonet:master-SNAPSHOT"
+
         testImplementation platform('org.junit:junit-bom:5.7.1')
         testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
         testImplementation "org.mockito:mockito-core:3.8.0"

@@ -1,4 +1,4 @@
-package main.java.com.mygdx.progarksurvive.progarksurvive;
+package com.mygdx.progarksurvive;
 
 import android.os.Bundle;
 
