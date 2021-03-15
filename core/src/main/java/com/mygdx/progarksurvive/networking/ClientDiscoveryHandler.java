@@ -5,8 +5,7 @@ import com.esotericsoftware.kryo.Kryo;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ClientDiscoveryHandler implements com.esotericsoftware.kryonet.ClientDiscoveryHandler {
 
@@ -17,10 +16,26 @@ public class ClientDiscoveryHandler implements com.esotericsoftware.kryonet.Clie
     }
 
     public void onDiscoveredHost(DatagramPacket datagramPacket, Kryo kryo) {
-        String gameSessionName = new String(datagramPacket.getData(), StandardCharsets.UTF_8);
+        String gameSessionName = getGameSessionName(datagramPacket);
         if(!hosts.containsKey(gameSessionName)) {
             hosts.put(gameSessionName, datagramPacket.getAddress());
         }
+    }
+
+    private String getGameSessionName(DatagramPacket datagramPacket){
+        List<Byte> bytes = new ArrayList<>();
+        for(Byte b : datagramPacket.getData()) {
+            if(b == 0){
+                break;
+            }
+            bytes.add(b);
+        }
+        byte[] result = new byte[bytes.size()];
+        for(int i = 0; i < bytes.size(); i++) {
+            result[i] = bytes.get(i);
+        }
+
+        return new String(result, StandardCharsets.UTF_8);
     }
 
     public Map<String, InetAddress> getHosts(){

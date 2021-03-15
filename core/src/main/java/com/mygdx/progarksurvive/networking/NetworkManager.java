@@ -40,12 +40,12 @@ public class NetworkManager {
         kryo.register(ClientUpdateEvent.class);
     }
 
-    private void hostGameSession(String gameSessionName) throws IOException {
+    public void hostGameSession(String gameSessionName) throws IOException {
         server.bind(TCP_PORT, UDP_PORT);
         server.setDiscoveryHandler(new HostDiscoveryHandler(gameSessionName));
     }
 
-    private void connectToGameSession(InetAddress address) throws IOException {
+    public void connectToGameSession(InetAddress address) throws IOException {
         client.connect(5000, address, TCP_PORT, UDP_PORT);
     }
 

@@ -9,15 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
+import com.mygdx.progarksurvive.networking.NetworkManager;
 
 import java.io.IOException;
-import java.net.InetAddress;
-
 
 public class Game extends ApplicationAdapter {
     AssetManager manager = new AssetManager();
@@ -46,6 +40,13 @@ public class Game extends ApplicationAdapter {
 
         table.add(connectButton);
         stage.addActor(table);
+
+        try {
+            NetworkManager.getInstance().hostGameSession("My Game Session");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        NetworkManager.getInstance().findAvailableHosts().forEach((k, v) -> System.out.println(k));
     }
 
     public void resize(int width, int height) {
