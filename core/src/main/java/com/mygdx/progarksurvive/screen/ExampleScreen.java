@@ -8,18 +8,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.progarksurvive.controller.ExampleController;
 import com.mygdx.progarksurvive.model.ExampleModel;
+import main.java.com.mygdx.progarksurvive.progarksurvive.Game;
 
 public class ExampleScreen implements Screen {
-    private ExampleController controller;
-    private ExampleModel model;
+    private Game game;
+
     private SpriteBatch batch;
 
     private Texture texture;
     private Sprite sprite;
 
-    public ExampleScreen(ExampleController controller, ExampleModel model){
-        this.controller = controller;
-        this.model = model;
+    public ExampleScreen(Game game){
+        this.game = game;
 
         batch = new SpriteBatch();
 
@@ -39,9 +39,11 @@ public class ExampleScreen implements Screen {
         Gdx.gl.glClearColor(1, 1, 1, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
         batch.begin();
 
-        batch.draw(sprite, model.getSquarePosition().x, model.getSquarePosition().y);
+        batch.draw(sprite, game.getModel().getSquarePosition().x, game.getModel().getSquarePosition().y);
+
 
         batch.end();
     }

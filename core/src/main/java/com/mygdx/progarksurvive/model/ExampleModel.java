@@ -14,4 +14,9 @@ public class ExampleModel {
         return squarePosition;
     }
 
+    public void setSquarePosition(float x, float y) {
+        squarePosition.x = x;
+        squarePosition.y = y;
+    }
+
 }

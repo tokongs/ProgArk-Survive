@@ -11,22 +11,36 @@ import com.mygdx.progarksurvive.screen.ExampleScreen;
 
 public class Game extends ApplicationAdapter {
 	ExampleScreen exScreen;
-
-
-
+	ExampleModel exModel;
+	ExampleController exController;
 
 	@Override
 	public void create () {
-		exScreen = new ExampleScreen(new ExampleController(), new ExampleModel());
+		exController = new ExampleController(this);
+		exModel = new ExampleModel();
+		exScreen = new ExampleScreen(this);
 	}
 
 	@Override
 	public void render () {
+		exController.updatePosition();
 		exScreen.render(1);
 	}
 	
 	@Override
 	public void dispose () {
 		exScreen.dispose();
+	}
+
+	public ExampleScreen getScreen() {
+		return exScreen;
+	}
+
+	public ExampleModel getModel() {
+		return exModel;
+	}
+
+	public ExampleController getController() {
+		return exController;
 	}
 }
