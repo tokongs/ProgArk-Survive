@@ -20,13 +20,6 @@ import java.net.InetAddress;
 
 
 public class Game extends ApplicationAdapter {
-
-    public final int TCP_PORT = 54555;
-    public final int UDP_PORT = 54777;
-
-    Server server = new Server();
-    Client client = new Client();
-
     AssetManager manager = new AssetManager();
 
     private Stage stage;
@@ -35,29 +28,6 @@ public class Game extends ApplicationAdapter {
     TextButton connectButton;
     @Override
     public void create() {
-        Kryo kryo = server.getKryo();
-        kryo.register(String.class);
-        kryo = client.getKryo();
-        kryo.register(String.class);
-        server.start();
-
-        client.start();
-
-        server.addListener(new Listener() {
-            public void received (Connection connection, Object object) {
-                if (object instanceof String) {
-                    System.out.println(object);
-                    connection.sendTCP("Thanks");
-                }
-            }
-        });
-
-        try {
-            server.bind(TCP_PORT, UDP_PORT);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         FileHandle f = Gdx.files.internal("uiskin.json");
         Skin skin = new Skin(f);
 
@@ -73,21 +43,6 @@ public class Game extends ApplicationAdapter {
         connectButton.setScale(4f);
         connectButton.setOriginY(0);
         connectButton.setOriginY(100);
-
-        connectButton.addListener(event -> {
-            if(client.isConnected()){
-                return false;
-            }
-            InetAddress addr = client.discoverHost(UDP_PORT, 5000);
-            System.out.println(addr);
-            try {
-                client.connect(10000, addr, TCP_PORT, UDP_PORT);
-                client.sendTCP("Hei");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return false;
-        });
 
         table.add(connectButton);
         stage.addActor(table);
@@ -108,12 +63,5 @@ public class Game extends ApplicationAdapter {
     public void dispose() {
         stage.dispose();
         manager.dispose();
-        if (server != null) {
-            try {
-                server.dispose();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }
