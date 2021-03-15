@@ -16,14 +16,15 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		exController = new ExampleController(this);
 		exModel = new ExampleModel();
+		exController = new ExampleController(this);
 		exScreen = new ExampleScreen(this);
 	}
 
 	@Override
 	public void render () {
 		exController.updatePosition();
+		Gdx.input.setOnscreenKeyboardVisible(false);
 		exScreen.render(1);
 	}
 	

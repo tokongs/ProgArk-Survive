@@ -9,21 +9,23 @@ import static com.badlogic.gdx.Input.Keys.W;
 
 public class ExampleController {
     private Game game;
-    private ExampleModel model;
 
-    private float speed = 3;
+
+    private float speed = 8;
 
     public ExampleController(Game game){
         this.game = game;
-        this.model = game.getModel();
+
     }
 
     public void updatePosition(){
         if(Gdx.input.isKeyPressed(W)){
-            model.setSquarePosition(model.getSquarePosition().x, model.getSquarePosition().y - speed);
+            game.getModel().setSquarePosition(game.getModel().getSquarePosition().x, game.getModel().getSquarePosition().y + speed);
+
         }
-        if(Gdx.input.isKeyPressed(S)){
-            model.setSquarePosition(model.getSquarePosition().x, model.getSquarePosition().y + speed);
+
+        else if(Gdx.input.isKeyPressed(S)){
+            game.getModel().setSquarePosition(game.getModel().getSquarePosition().x, game.getModel().getSquarePosition().y - speed);
         }
     }
 
