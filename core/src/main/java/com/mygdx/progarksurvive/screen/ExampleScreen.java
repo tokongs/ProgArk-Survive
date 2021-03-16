@@ -11,17 +11,15 @@ import com.mygdx.progarksurvive.model.ExampleModel;
 import main.java.com.mygdx.progarksurvive.progarksurvive.Game;
 
 public class ExampleScreen implements Screen {
-    private Game game;
-
     private SpriteBatch batch;
-
+    private Game game;
     private Texture texture;
     private Sprite sprite;
 
     public ExampleScreen(Game game){
         this.game = game;
 
-        batch = new SpriteBatch();
+        this.batch = game.getBatch();
 
         texture = new Texture("badlogic.jpg");
         sprite = new Sprite(texture);
