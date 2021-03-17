@@ -5,64 +5,60 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.mygdx.progarksurvive.networking.NetworkManager;
+import com.esotericsoftware.kryonet.Server;
+import com.mygdx.progarksurvive.networking.*;
+import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 
+import javax.inject.Inject;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Map;
 
 public class Game extends ApplicationAdapter {
-    AssetManager manager = new AssetManager();
+    private final NetworkedGameClient client;
+    private final NetworkedGameHost host;
 
-    private Stage stage;
-    private Table table;
 
-    TextButton connectButton;
+    @Inject
+    public Game(NetworkedGameHost host, NetworkedGameClient client){
+        super();
+        this.host = host;
+        this.client = client;
+
+        host.setEventHandler(event -> {
+            System.out.println(event.playerPosition);
+        });
+    }
+
     @Override
     public void create() {
-        FileHandle f = Gdx.files.internal("uiskin.json");
-        Skin skin = new Skin(f);
-
-        stage = new Stage();
-        Gdx.input.setInputProcessor(stage);
-
-        table = new Table();
-        table.setFillParent(true);
-        table.setDebug(true);
-
-        connectButton = new TextButton("Connect to local server", skin);
-        connectButton.setTransform(true);
-        connectButton.setScale(4f);
-        connectButton.setOriginY(0);
-        connectButton.setOriginY(100);
-
-        table.add(connectButton);
-        stage.addActor(table);
-
         try {
-            NetworkManager.getInstance().hostGameSession("My Game Session");
+            host.startGameSession("My Game Session");
         } catch (IOException e) {
             e.printStackTrace();
         }
-        NetworkManager.getInstance().findAvailableHosts().forEach((k, v) -> System.out.println(k));
-    }
-
-    public void resize(int width, int height) {
-        stage.getViewport().update(width, height, true);
+        Map<String, InetAddress> hosts = client.findGameSessions();
+        try {
+            client.joinGameSession(hosts.get("My Game Session"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void render() {
+        client.update(new ClientUpdateEvent(new Vector2(1, 2)));
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
-        manager.dispose();
+
     }
 }

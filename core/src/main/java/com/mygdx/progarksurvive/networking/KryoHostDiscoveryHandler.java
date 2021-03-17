@@ -1,6 +1,7 @@
 package com.mygdx.progarksurvive.networking;
 
 import com.esotericsoftware.kryonet.Serialization;
+import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -8,11 +9,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.charset.StandardCharsets;
 
-public class HostDiscoveryHandler implements com.esotericsoftware.kryonet.ServerDiscoveryHandler {
+public class KryoHostDiscoveryHandler implements ServerDiscoveryHandler {
 
     public ByteBuffer gameSessionName;
 
-    public HostDiscoveryHandler(String gameSessionName){
+    public KryoHostDiscoveryHandler(String gameSessionName){
         this.gameSessionName = ByteBuffer.wrap(gameSessionName.getBytes(StandardCharsets.UTF_8));
 
     }

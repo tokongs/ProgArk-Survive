@@ -1,13 +1,14 @@
 package com.mygdx.progarksurvive.networking;
 
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class ClientDiscoveryHandler implements com.esotericsoftware.kryonet.ClientDiscoveryHandler {
+public class KryoClientDiscoveryHandler implements ClientDiscoveryHandler {
 
     private Map<String, InetAddress> hosts = new HashMap<>();
 
@@ -15,7 +16,7 @@ public class ClientDiscoveryHandler implements com.esotericsoftware.kryonet.Clie
         return new DatagramPacket(new byte[64], 64);
     }
 
-    public void onDiscoveredHost(DatagramPacket datagramPacket, Kryo kryo) {
+    public void onDiscoveredHost(DatagramPacket datagramPacket, com.esotericsoftware.kryo.Kryo kryo) {
         String gameSessionName = getGameSessionName(datagramPacket);
         if(!hosts.containsKey(gameSessionName)) {
             hosts.put(gameSessionName, datagramPacket.getAddress());
