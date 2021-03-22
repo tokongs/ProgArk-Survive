@@ -1,7 +1,6 @@
 package main.java.com.mygdx.progarksurvive.progarksurvive;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.progarksurvive.controller.ExampleController;
 import com.mygdx.progarksurvive.model.ExampleModel;
@@ -30,7 +29,6 @@ public class Game extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		exController.updatePosition();
 		mainmenuscreen.render(1);
 	}
 	
