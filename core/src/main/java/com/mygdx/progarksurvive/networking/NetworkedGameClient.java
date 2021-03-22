@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 
+/**
+ * Used for interacting with a remote host.
+ */
 @Singleton
 public interface NetworkedGameClient {
 
@@ -20,7 +23,7 @@ public interface NetworkedGameClient {
     /**
      *  Join a game on the provided address
      */
-    void joinGameSession(InetAddress address) throws IOException;
+    void joinGameSession(String address) throws IOException;
 
     /**
      * Leave the active game session.
@@ -28,13 +31,13 @@ public interface NetworkedGameClient {
     void leaveGameSession();
 
     /**
-     * Send an update event to the game host
+     * Send an update event to the game host.
      * @param event to send
      */
     void update(ClientUpdateEvent event);
 
     /**
-     * Set the event handler
+     * Set a handler which receives all events from host.
      * @param eventHandler
      */
     void setEventHandler(UpdateEventHandler<HostUpdateEvent> eventHandler);

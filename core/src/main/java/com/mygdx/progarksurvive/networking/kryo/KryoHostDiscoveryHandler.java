@@ -1,4 +1,4 @@
-package com.mygdx.progarksurvive.networking;
+package com.mygdx.progarksurvive.networking.kryo;
 
 import com.esotericsoftware.kryonet.Serialization;
 import com.esotericsoftware.kryonet.ServerDiscoveryHandler;

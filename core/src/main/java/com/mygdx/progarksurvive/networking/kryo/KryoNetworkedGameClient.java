@@ -1,6 +1,8 @@
-package com.mygdx.progarksurvive.networking;
+package com.mygdx.progarksurvive.networking.kryo;
 
 import com.esotericsoftware.kryonet.Client;
+import com.mygdx.progarksurvive.networking.NetworkedGameClient;
+import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
@@ -9,6 +11,10 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 
+/**
+ * Implementation of {@link com.mygdx.progarksurvive.networking.NetworkedGameClient NetworkedGameClient} based
+ * on Kryonet.
+ */
 public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameClient {
 
     private KryoClientListener listener = null;
@@ -23,7 +29,7 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     }
 
     @Override
-    public void joinGameSession(InetAddress address) throws IOException {
+    public void joinGameSession(String address) throws IOException {
         client.connect(5000, address, TCP_PORT, UDP_PORT);
     }
 

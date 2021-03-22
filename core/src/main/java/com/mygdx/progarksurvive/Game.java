@@ -2,15 +2,8 @@ package com.mygdx.progarksurvive;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 
@@ -44,7 +37,7 @@ public class Game extends ApplicationAdapter {
         }
         Map<String, InetAddress> hosts = client.findGameSessions();
         try {
-            client.joinGameSession(hosts.get("My Game Session"));
+            client.joinGameSession(hosts.get("My Game Session").getHostAddress());
         } catch (IOException e) {
             e.printStackTrace();
         }

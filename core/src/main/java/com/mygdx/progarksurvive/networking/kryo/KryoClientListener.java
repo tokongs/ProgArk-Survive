@@ -1,8 +1,9 @@
-package com.mygdx.progarksurvive.networking;
+package com.mygdx.progarksurvive.networking.kryo;
 
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
@@ -16,7 +17,7 @@ public class KryoClientListener extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
-        if (object instanceof ClientUpdateEvent) {
+        if (object instanceof HostUpdateEvent) {
             handler.handleEvent((HostUpdateEvent) object);
         } else {
             Gdx.app.debug("ClientListener", "Received object of unknown type");

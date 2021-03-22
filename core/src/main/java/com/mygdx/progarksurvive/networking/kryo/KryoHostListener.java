@@ -1,8 +1,9 @@
-package com.mygdx.progarksurvive.networking;
+package com.mygdx.progarksurvive.networking.kryo;
 
 import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 
 public class KryoHostListener extends Listener {
