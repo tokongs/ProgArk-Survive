@@ -18,12 +18,15 @@ import java.util.Map;
 public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameClient {
 
     private KryoClientListener listener = null;
+    KryoClientDiscoveryHandler discoveryHandler;
 
     Client client;
 
     @Inject
-    public KryoNetworkedGameClient(Client client) {
+    public KryoNetworkedGameClient(Client client, KryoClientDiscoveryHandler discoveryHandler) {
         this.client = client;
+        this.discoveryHandler = discoveryHandler;
+        client.setDiscoveryHandler(discoveryHandler);
         registerClasses(client.getKryo());
         client.start();
     }
@@ -55,9 +58,8 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
 
     @Override
     public Map<String, InetAddress> findGameSessions() {
-        KryoClientDiscoveryHandler handler = new KryoClientDiscoveryHandler();
-        client.setDiscoveryHandler(handler);
+        discoveryHandler.reset();
         client.discoverHosts(UDP_PORT, 5000);
-        return handler.getHosts();
+        return discoveryHandler.getHosts();
     }
 }

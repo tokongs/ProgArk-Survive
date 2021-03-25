@@ -10,4 +10,14 @@ public class HostUpdateEvent {
     public HostUpdateEvent(){
         playerPositions = new HashMap<>();
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof HostUpdateEvent)) return false;
+
+        HostUpdateEvent e = (HostUpdateEvent) o;
+
+        return playerPositions.equals(e.playerPositions);
+    }
 }

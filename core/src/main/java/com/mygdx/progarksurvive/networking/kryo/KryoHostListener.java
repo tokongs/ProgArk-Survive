@@ -21,4 +21,12 @@ public class KryoHostListener extends Listener {
             Gdx.app.debug("HostListener", "Received object of unknown type");
         }
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof KryoHostListener)) return false;
+
+        return handler.equals(((KryoHostListener) o).handler);
+    }
 }

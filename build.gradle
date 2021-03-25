@@ -73,6 +73,7 @@ project(":android") {
 
 project(":core") {
     apply plugin: "java-library"
+    apply plugin: "jacoco"
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -93,3 +94,4 @@ project(":core") {
         testImplementation 'org.mockito:mockito-inline:3.8.0'
     }
 }
+

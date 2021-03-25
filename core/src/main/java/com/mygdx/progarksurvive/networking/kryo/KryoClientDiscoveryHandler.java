@@ -41,10 +41,23 @@ public class KryoClientDiscoveryHandler implements ClientDiscoveryHandler {
         return new String(result, StandardCharsets.UTF_8);
     }
 
+    public void reset(){
+        hosts.clear();
+    }
+
     public Map<String, InetAddress> getHosts(){
         return hosts;
     }
 
+    @Override
     public void onFinally() {
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof KryoClientDiscoveryHandler)) return false;
+
+        return hosts.equals(((KryoClientDiscoveryHandler) o).hosts);
     }
 }

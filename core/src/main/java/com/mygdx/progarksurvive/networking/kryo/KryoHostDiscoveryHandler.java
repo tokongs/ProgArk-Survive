@@ -23,4 +23,12 @@ public class KryoHostDiscoveryHandler implements ServerDiscoveryHandler {
         datagramChannel.send(this.gameSessionName, fromAddress);
         return true;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof KryoHostDiscoveryHandler)) return false;
+
+        return gameSessionName.equals(((KryoHostDiscoveryHandler) o).gameSessionName);
+    }
 }

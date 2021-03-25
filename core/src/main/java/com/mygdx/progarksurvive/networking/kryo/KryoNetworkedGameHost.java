@@ -1,7 +1,9 @@
 package com.mygdx.progarksurvive.networking.kryo;
 
+import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
@@ -19,7 +21,7 @@ import java.io.IOException;
 public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost {
 
     private final Server server;
-    private Listener listener = null;
+    private Listener listener;
 
     @Inject
     public KryoNetworkedGameHost(Server server){

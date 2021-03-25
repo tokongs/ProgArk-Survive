@@ -11,4 +11,11 @@ public class ClientUpdateEvent {
     public ClientUpdateEvent(Vector2 playerPosition) {
         this.playerPosition = playerPosition;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this) return true;
+        if(!(o instanceof ClientUpdateEvent)) return false;
+        return playerPosition == ((ClientUpdateEvent) o).playerPosition;
+    }
 }

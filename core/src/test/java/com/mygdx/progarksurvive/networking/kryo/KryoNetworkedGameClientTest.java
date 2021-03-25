@@ -1,11 +1,7 @@
 package com.mygdx.progarksurvive.networking.kryo;
 
-import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
-import com.esotericsoftware.kryonet.Connection;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
@@ -14,80 +10,77 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * Note that this is not a very good way to unit test something. But with networking code unit testing can be difficult.
+ * And being dependant on kryonet makes testing and mocking behaviour difficult, hence the use of Mockito's verify method.
+ * This should only be used when results can not be tested.
+ */
 @ExtendWith(MockitoExtension.class)
 class KryoNetworkedGameClientTest {
 
-    Client client;
-    @Spy Server server;
-    
+    @Mock Client client;
+    @Mock KryoClientDiscoveryHandler discoveryHandler;
+
     @BeforeEach
-    public void beforeEach() throws IOException {
-        client = new Client();
-        server = new Server();
-        server.start();
-        KryoBase.registerClasses(server.getKryo());
-        server.bind(54555, 54777);
+    void setup(){
+        when(client.getKryo()).thenReturn(new Kryo());
     }
 
-    @AfterEach
-    public void afterEach() throws IOException {
-        client.stop();
-        client.dispose();
-        server.stop();
-        server.dispose();
-    }
-    
     @Test
     void testJoinGameSession() throws IOException {
-        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client);
-        kryoClient.joinGameSession("127.0.0.1");
-        assertTrue(client.isConnected());
-        assertEquals(server.getConnections().length, 1);
+        String address = "127.0.0.1";
+        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
+        kryoClient.joinGameSession(address);
+        verify(client, times(1)).connect(anyInt(), eq(address), eq(54555), eq(54777));
     }
 
     @Test
-    void testLeaveGameSession() throws IOException {
-        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client);
-        kryoClient.joinGameSession("127.0.0.1");
+    void testLeaveGameSession() {
+        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
         kryoClient.leaveGameSession();
-        assertFalse(client.isConnected());
-        assertEquals(server.getConnections().length, 0);
+        verify(client, times(1)).close();
     }
-
     @Test
-    void testUpdate(@Mock Listener.QueuedListener serverListener) throws IOException {
+    void testUpdate() {
         ClientUpdateEvent event = new ClientUpdateEvent();
-
-        server.addListener(serverListener);
-
-        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client);
-        kryoClient.joinGameSession("127.0.0.1");
-
+        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
         kryoClient.update(event);
-        kryoClient.update(event);
-        kryoClient.update(event);
+
+        verify(client, times(1)).sendTCP(event);
     }
 
     @Test
-    void testSetEventHandler(@Mock UpdateEventHandler<HostUpdateEvent> handler) throws IOException {
-        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client);
-        kryoClient.joinGameSession("127.0.0.1");
-        kryoClient.setEventHandler(handler);
-        server.sendToAllTCP(new HostUpdateEvent());
-        verify(handler, times(1)).handleEvent(any(HostUpdateEvent.class));
+    void testSetEventHandler(@Mock UpdateEventHandler<HostUpdateEvent> handler1, @Mock UpdateEventHandler<HostUpdateEvent> handler2) {
+        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
+        kryoClient.setEventHandler(handler1);
+
+        verify(client, times(0)).removeListener(any());
+        verify(client, times(1)).addListener(eq(new KryoClientListener(handler1)));
+
+        kryoClient.setEventHandler(handler2);
+
+        verify(client, times(1)).removeListener(eq(new KryoClientListener(handler1)));
+        verify(client, times(1)).addListener(eq(new KryoClientListener(handler2)));
     }
 
     @Test
-    void testFindGameSessions() {
+    void findGameSessions(@Mock HashMap<String, InetAddress> hosts) {
+        KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
+
+
+        when(discoveryHandler.getHosts()).thenReturn(hosts);
+        Map<String, InetAddress> discoveredHosts = kryoClient.findGameSessions();
+        assertEquals(hosts,discoveredHosts);
+        verify(client, times(1)).discoverHosts(54777, 5000);
     }
 }
