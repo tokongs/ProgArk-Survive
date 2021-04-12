@@ -1,5 +1,6 @@
 package com.mygdx.progarksurvive;
 
+import com.badlogic.ashley.core.Engine;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
@@ -11,14 +12,17 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 @Module
 public interface GameModule {
-    @Provides
+
+    @Provides @Singleton
     static Client provideClient() {
         return new Client();
     }
 
-    @Provides
+    @Provides @Singleton
     static Server provideServer() {
         return new Server();
     }

@@ -3,11 +3,13 @@ package com.mygdx.progarksurvive.networking.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
 
+import javax.inject.Singleton;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Singleton
 public class KryoClientDiscoveryHandler implements ClientDiscoveryHandler {
 
     private Map<String, InetAddress> hosts = new HashMap<>();

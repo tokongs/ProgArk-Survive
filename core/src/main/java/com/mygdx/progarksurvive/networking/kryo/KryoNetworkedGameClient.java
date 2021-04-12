@@ -7,6 +7,7 @@ import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  * Implementation of {@link com.mygdx.progarksurvive.networking.NetworkedGameClient NetworkedGameClient} based
  * on Kryonet.
  */
+@Singleton
 public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameClient {
 
     private KryoClientListener listener = null;
