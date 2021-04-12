@@ -1,16 +1,30 @@
 package com.mygdx.progarksurvive.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.mygdx.progarksurvive.controller.GameController;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class GameScreen implements Screen {
+
+    GameController controller;
+
+    @Inject
+    public GameScreen(GameController controller){
+        this.controller = controller;
+    }
+
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(controller);
     }
 
     @Override
     public void render(float delta) {
-
+        controller.update(delta);
     }
 
     @Override

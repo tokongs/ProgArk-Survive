@@ -3,6 +3,7 @@ package com.mygdx.progarksurvive;
 import com.badlogic.ashley.core.Engine;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
+import com.mygdx.progarksurvive.model.GameModel;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.kryo.KryoClientDiscoveryHandler;
@@ -16,6 +17,9 @@ import javax.inject.Singleton;
 
 @Module
 public interface GameModule {
+
+    @Provides @Singleton
+    static Engine provideEngine() {return new Engine(); }
 
     @Provides @Singleton
     static Client provideClient() {

@@ -6,30 +6,30 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.screen.GameScreen;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 
-public class Game extends ApplicationAdapter {
+public class Game extends com.badlogic.gdx.Game {
     private final NetworkedGameClient client;
     private final NetworkedGameHost host;
 
+    private final GameScreen gameScreen;
 
     @Inject
-    public Game(NetworkedGameHost host, NetworkedGameClient client){
+    public Game(NetworkedGameHost host, NetworkedGameClient client, GameScreen gameScreen){
         super();
         this.host = host;
         this.client = client;
-
-        host.setEventHandler(event -> {
-            System.out.println(event.playerPosition);
-        });
+        this.gameScreen = gameScreen;
     }
 
     @Override
     public void create() {
+        this.setScreen(gameScreen);
         try {
             host.startGameSession("My Game Session");
         } catch (IOException e) {
