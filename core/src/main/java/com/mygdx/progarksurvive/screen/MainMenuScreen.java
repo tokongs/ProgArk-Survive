@@ -4,38 +4,40 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import main.java.com.mygdx.progarksurvive.progarksurvive.Game;
 
 public class MainMenuScreen implements Screen {
     private SpriteBatch batch;
     private Game game;
-
-    private Texture playBtnTexture;
+    private BitmapFont font;
+    //textures
+    /*private Texture playBtnTexture;
     private Texture settingsBtnTexture;
     private Texture playBtnActiveTexture;
     private Texture settingsBtnActiveTexture;
 
+    sprites
     private Sprite playBtn;
     private Sprite settingsBtn;
+     */
 
     public MainMenuScreen(Game game){
         this.game = game;
         this.batch = game.getBatch();
 
-        playBtnTexture = new Texture("playbtn.png");
-        playBtnActiveTexture = new Texture("playbtnactive.png");
+        font = new BitmapFont();
+        //playBtnTexture = new Texture("playbtn.png");
+        //playBtnActiveTexture = new Texture("playbtnactive.png");
         //settingsBtnTexture = new Texture();
         //settingsBtnActiveTexture = new Texture();
 
-        playBtn = new Sprite(playBtnTexture);
+        //playBtn = new Sprite(playBtnTexture);
         //settingsBtn = new Sprite(settingsBtnTexture);
-    }
-
-    @Override
-    public void show() {
     }
 
     @Override
@@ -44,8 +46,10 @@ public class MainMenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         batch.begin();
-        batch.draw(playBtn, Gdx.graphics.getWidth()/2 - playBtn.getWidth()/2, Gdx.graphics.getHeight()/2 - 100);
+        font.draw(batch, "PLAY", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()/2);
+        //batch.draw(playBtn, Gdx.graphics.getWidth()/2 - playBtn.getWidth()/2, Gdx.graphics.getHeight()/2);
         batch.end();
+
     }
 
     @Override
@@ -69,10 +73,16 @@ public class MainMenuScreen implements Screen {
     }
 
     @Override
+    public void show() {
+    }
+
+    @Override
     public void dispose() {
-        playBtnActiveTexture.dispose();
+        /*playBtnActiveTexture.dispose();
         playBtnTexture.dispose();
         settingsBtnTexture.dispose();
         settingsBtnActiveTexture.dispose();
+
+         */
     }
 }
