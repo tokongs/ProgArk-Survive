@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 public class PositionComponent implements Component {
 
 
-    Vector2 position;
+    public Vector2 position;
 
     public PositionComponent(float x, float y){
         position = new Vector2(x, y);

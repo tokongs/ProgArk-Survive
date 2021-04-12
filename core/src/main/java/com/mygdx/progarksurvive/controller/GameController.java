@@ -1,7 +1,9 @@
 package com.mygdx.progarksurvive.controller;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.InputProcessor;
 import com.mygdx.progarksurvive.model.GameModel;
+import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,14 +12,16 @@ import javax.inject.Singleton;
 public class GameController implements InputProcessor {
 
     private final GameModel model;
+    private final Engine ashley;
 
     @Inject
-    public GameController(GameModel model){
+    public GameController(GameModel model, Engine ashley){
         this.model = model;
+        this.ashley = ashley;
     }
 
     public void update(float delta){
-
+        ashley.update(delta);
     }
 
     @Override
