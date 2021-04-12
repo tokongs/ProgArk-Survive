@@ -1,4 +1,4 @@
-sourceCompatibility = 12
+sourceCompatibility = 11
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 eclipse.project.name = appName + "-core"
@@ -8,4 +8,34 @@ test {
     testLogging {
         events "passed", "skipped", "failed"
     }
+
+    finalizedBy jacocoTestReport
 }
+
+jacocoTestReport {
+    dependsOn test
+
+    reports {
+        xml.enabled false
+        csv.enabled false
+    }
+
+        afterEvaluate {
+            classDirectories.setFrom(files(classDirectories.files.collect {
+                fileTree(dir: it, exclude: [
+                        '**/*_MembersInjector.class',
+                        '**/Dagger*Component*.class',
+                        '**/Dagger*Factory.class',
+                        '**/Dagger*Factory$Builder.class',
+                        '**/Dagger*Subcomponent*.class',
+                        '**/*Subcomponent$Builder.class',
+                        '**/*Module_*Factory.*',
+                        '**/*_Factory.class',
+                        '**/*Module_*Factory$InstanceHolder.class',
+                        '**/*Module.class',
+                ])
+            }))
+        }
+}
+
+

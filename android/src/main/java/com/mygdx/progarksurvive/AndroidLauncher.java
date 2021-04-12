@@ -1,4 +1,4 @@
-package main.java.com.mygdx.progarksurvive.progarksurvive;
+package com.mygdx.progarksurvive;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Game(), config);
+		GameFactory gameFactory = DaggerGameFactory.create();
+		initialize(gameFactory.game(), config);
 	}
 }
