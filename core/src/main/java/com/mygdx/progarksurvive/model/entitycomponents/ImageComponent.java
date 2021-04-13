@@ -8,8 +8,9 @@ import com.badlogic.gdx.math.Vector2;
 public class ImageComponent implements Component {
 
     public Texture texture;
+    public String path;
 
-    public ImageComponent(Texture texture){
-        this.texture = texture;
+    public ImageComponent(String path){
+        this.path = path;
     }
 }

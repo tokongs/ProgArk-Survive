@@ -21,17 +21,16 @@ public class GameModel {
 
     @Inject
     public GameModel(Engine ashley){
+        // Entities
         ashley.addEntity(player);
+
+        // Components
         player.add(new PositionComponent(0, 0));
-        player.add(new VelocityComponent(.5f, .5f));
+        player.add(new VelocityComponent(5f, 5f));
+        player.add(new ImageComponent("images/player.png"));
 
-        // Nullpointer reference to the filehandle.
-        // Tried moving the texture creation to the image component, but Gdx is not instantiated here either.
-        //player.add(new ImageComponent(new Texture(Gdx.files.internal("images/player.png"))));
-
+        // Systems
         ashley.addSystem(new MovementSystem());
-
-        // awaiting image component texture fix
-        //ashley.addSystem(new RenderSystem());
+        ashley.addSystem(new RenderSystem());
     }
 }

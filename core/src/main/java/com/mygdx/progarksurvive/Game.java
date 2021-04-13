@@ -45,9 +45,10 @@ public class Game extends com.badlogic.gdx.Game {
 
     @Override
     public void render() {
-        super.render();
         //client.update(new ClientUpdateEvent(new Vector2(1, 2)));
-        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        super.render();
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.mygdx.progarksurvive.controller;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.InputProcessor;
 import com.mygdx.progarksurvive.model.GameModel;
+import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
+import com.mygdx.progarksurvive.model.entitysystems.RenderSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -63,5 +65,9 @@ public class GameController implements InputProcessor {
     @Override
     public boolean scrolled(float amountX, float amountY) {
         return false;
+    }
+
+    public void load_textures() {
+        ashley.getSystem(RenderSystem.class).addAllTextures();
     }
 }

@@ -20,6 +20,9 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(controller);
+
+        // Loading textures after Gdx has been built
+        controller.load_textures();
     }
 
     @Override
