@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.VelocityComponent;
@@ -28,6 +29,7 @@ public class GameModel {
         player.add(new PositionComponent(0, 0));
         player.add(new VelocityComponent(5f, 5f));
         player.add(new ImageComponent("images/player.png"));
+        player.add(new HealthComponent(100));
 
         // Systems
         ashley.addSystem(new MovementSystem());
