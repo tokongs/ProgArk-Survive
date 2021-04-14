@@ -1,5 +1,6 @@
 package com.mygdx.progarksurvive;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
@@ -7,6 +8,9 @@ import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.kryo.KryoClientDiscoveryHandler;
 import com.mygdx.progarksurvive.networking.kryo.KryoNetworkedGameClient;
 import com.mygdx.progarksurvive.networking.kryo.KryoNetworkedGameHost;
+
+import javax.inject.Singleton;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
