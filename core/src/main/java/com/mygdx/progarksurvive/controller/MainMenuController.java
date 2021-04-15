@@ -1,5 +1,6 @@
 package com.mygdx.progarksurvive.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
@@ -36,13 +37,14 @@ public class MainMenuController implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(model.getPlayBtnRect().contains(screenX, screenY)){
+        int y = Gdx.graphics.getHeight() - screenY;
+        if(model.getPlayBtnRect().contains(screenX, y)){
             System.out.println("game screen");
             game.setState(GameState.GAME);
         }
-        else if(model.getSettingsBtnRect().contains(screenX, screenY)){
+        else if(model.getSettingsBtnRect().contains(screenX, y)){
             System.out.println("settingscreen");
-            //game.setState(GameState.SETTINGS);
+            game.setState(GameState.SETTINGS);
         }
         return false;
     }

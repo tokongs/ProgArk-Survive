@@ -13,6 +13,7 @@ import com.mygdx.progarksurvive.screen.GameScreen;
 import com.mygdx.progarksurvive.screen.LoadingScreen;
 import com.mygdx.progarksurvive.screen.MainMenuScreen;
 import com.mygdx.progarksurvive.screen.SettingsScreen;
+import com.mygdx.progarksurvive.Prefs;
 
 import dagger.Lazy;
 
@@ -26,6 +27,9 @@ import java.util.Map;
 public class Main extends com.badlogic.gdx.Game {
 
     private final AssetManager assetManager;
+    private final Prefs prefs;
+    private boolean gameRunning = false;
+
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
@@ -43,6 +47,7 @@ public class Main extends com.badlogic.gdx.Game {
     public Main(AssetManager assetManager){
         super();
         this.assetManager = assetManager;
+        this.prefs = new Prefs();
     }
 
     @Override
@@ -75,5 +80,15 @@ public class Main extends com.badlogic.gdx.Game {
                 setScreen(gameScreen.get());
                 break;
         }
+    }
+
+    public Prefs getPrefs(){return prefs;}
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
     }
 }
