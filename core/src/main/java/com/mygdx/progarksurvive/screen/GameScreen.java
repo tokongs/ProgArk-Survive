@@ -3,6 +3,7 @@ package com.mygdx.progarksurvive.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.mygdx.progarksurvive.controller.GameController;
+import com.mygdx.progarksurvive.model.GameModel;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,7 +11,7 @@ import javax.inject.Singleton;
 @Singleton
 public class GameScreen implements Screen {
 
-    GameController controller;
+    private final GameController controller;
 
     @Inject
     public GameScreen(GameController controller){
@@ -20,9 +21,6 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(controller);
-
-        // Loading textures after Gdx has been built
-        controller.load_textures();
     }
 
     @Override

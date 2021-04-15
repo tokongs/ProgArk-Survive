@@ -8,6 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -27,15 +28,10 @@ public class RenderSystem extends EntitySystem {
         entities = engine.getEntitiesFor(Family.all(PositionComponent.class, ImageComponent.class).get());
     }
 
-    public void addAllTextures(){
-        for(Entity entity: this.entities){
-            ImageComponent image = im.get(entity);
-            image.texture = new Texture(Gdx.files.internal(image.path));
-        }
-    }
-
     public void update(float deltaTime){
         SpriteBatch batch = new SpriteBatch();
+        Gdx.gl.glClearColor( 0, 0, 0, 1 );
+        Gdx.gl.glClear( GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT );
         batch.begin();
         if(this.entities != null){
             for(Entity entity: this.entities){

@@ -1,9 +1,11 @@
 package com.mygdx.progarksurvive;
 
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
-import com.mygdx.progarksurvive.model.GameModel;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.kryo.KryoClientDiscoveryHandler;
@@ -31,6 +33,13 @@ public interface GameModule {
         return new Server();
     }
 
+    @Provides @Singleton
+    static AssetManager provideAssetManager() {
+        AssetManager assetManager = new AssetManager();
+        assetManager.load("images/player.png", Texture.class);
+        return assetManager;
+    }
+
     @Provides
     static KryoClientDiscoveryHandler provideKryoClientDiscoveryHandler() {
         return new KryoClientDiscoveryHandler();
@@ -42,5 +51,6 @@ public interface GameModule {
     @Binds
     NetworkedGameHost bindNetworkedGameHost(KryoNetworkedGameHost impl);
 
-
+    @Binds
+    Game bindGame(Main impl);
 }

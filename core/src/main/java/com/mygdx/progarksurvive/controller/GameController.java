@@ -66,8 +66,4 @@ public class GameController implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
-
-    public void load_textures() {
-        ashley.getSystem(RenderSystem.class).addAllTextures();
-    }
 }

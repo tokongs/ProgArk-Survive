@@ -3,6 +3,7 @@ package com.mygdx.progarksurvive.model;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
@@ -21,14 +22,14 @@ public class GameModel {
     public Entity player = new Entity();
 
     @Inject
-    public GameModel(Engine ashley){
+    public GameModel(Engine ashley, AssetManager assetManager){
         // Entities
         ashley.addEntity(player);
 
         // Components
         player.add(new PositionComponent(0, 0));
         player.add(new VelocityComponent(5f, 5f));
-        player.add(new ImageComponent("images/player.png"));
+        player.add(new ImageComponent(assetManager.get("images/player.png", Texture.class)));
         player.add(new HealthComponent(100));
 
         // Systems
