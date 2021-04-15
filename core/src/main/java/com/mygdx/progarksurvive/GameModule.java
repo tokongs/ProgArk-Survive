@@ -1,6 +1,9 @@
 package com.mygdx.progarksurvive;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
@@ -15,16 +18,29 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
+import javax.inject.Singleton;
+
 @Module
 public interface GameModule {
-    @Provides
+
+    @Provides @Singleton
+    static Engine provideEngine() {return new Engine(); }
+
+    @Provides @Singleton
     static Client provideClient() {
         return new Client();
     }
 
-    @Provides
+    @Provides @Singleton
     static Server provideServer() {
         return new Server();
+    }
+
+    @Provides @Singleton
+    static AssetManager provideAssetManager() {
+        AssetManager assetManager = new AssetManager();
+        assetManager.load("images/player.png", Texture.class);
+        return assetManager;
     }
 
     @Provides
@@ -38,5 +54,6 @@ public interface GameModule {
     @Binds
     NetworkedGameHost bindNetworkedGameHost(KryoNetworkedGameHost impl);
 
-
+    @Binds
+    Game bindGame(Main impl);
 }

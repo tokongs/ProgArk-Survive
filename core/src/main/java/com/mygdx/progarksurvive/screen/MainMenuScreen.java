@@ -4,12 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.progarksurvive.Game;
 import com.mygdx.progarksurvive.controller.MainMenuController;
 import com.mygdx.progarksurvive.model.MainMenuModel;
-import com.sun.tools.javac.Main;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

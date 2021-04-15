@@ -1,5 +1,6 @@
 package com.mygdx.progarksurvive;
 
+import com.badlogic.gdx.Game;
 import dagger.Component;
 
 import javax.inject.Singleton;
@@ -7,5 +8,5 @@ import javax.inject.Singleton;
 @Singleton
 @Component(modules = GameModule.class)
 public interface GameFactory {
-    Game game();
+    com.badlogic.gdx.Game game();
 }
