@@ -10,7 +10,6 @@ public class AndroidLauncher extends AndroidApplication {
 	protected void onCreate (Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		GameFactory gameFactory = DaggerGameFactory.create();
-		initialize(gameFactory.game(), config);
+		initialize(new DependencyRoot(), config);
 	}
 }
