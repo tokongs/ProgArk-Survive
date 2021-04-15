@@ -10,6 +10,7 @@ import com.mygdx.progarksurvive.model.MainMenuModel;
 import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.screen.MainMenuScreen;
+import com.sun.tools.javac.Main;
 
 import javax.inject.Inject;
 import java.io.IOException;
