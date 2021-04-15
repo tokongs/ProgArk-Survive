@@ -2,6 +2,7 @@ package com.mygdx.progarksurvive;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,9 @@ import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.screen.GameScreen;
 import com.mygdx.progarksurvive.screen.LoadingScreen;
+import com.mygdx.progarksurvive.screen.MainMenuScreen;
+import com.mygdx.progarksurvive.screen.SettingsScreen;
+
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -30,7 +34,10 @@ public class Main extends com.badlogic.gdx.Game {
     Lazy<GameScreen> gameScreen;
 
     @Inject
-    Lazy<GameScreen> mainMenuScreen;
+    Lazy<MainMenuScreen> mainMenuScreen;
+
+    @Inject
+    Lazy<SettingsScreen> settingsScreen;
 
     @Inject
     public Main(AssetManager assetManager){
@@ -55,6 +62,9 @@ public class Main extends com.badlogic.gdx.Game {
 
     public void setState(GameState state){
         switch (state) {
+            case SETTINGS:
+                setScreen(settingsScreen.get());
+                break;
             case LOADING:
                 setScreen(loadingScreen.get());
                 break;

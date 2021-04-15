@@ -2,7 +2,15 @@ package com.mygdx.progarksurvive.screen;
 
 import com.badlogic.gdx.Screen;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class SettingsScreen implements Screen {
+
+    @Inject
+    public SettingsScreen(){}
+
     @Override
     public void show() {
         
