@@ -31,8 +31,8 @@ public class MainMenuScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        playBtnTexture = new Texture("playbtn_w77_h29.png");
-        settingsBtnTexture = new Texture("settingbtn_w162_h29.png");
+        playBtnTexture = new Texture("PLAY_W84_H28.png");
+        settingsBtnTexture = new Texture("SETTINGS_W173_H28.png");
 
         model.createRectangles();
 

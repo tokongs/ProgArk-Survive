@@ -32,10 +32,10 @@ public class SettingsScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        mutegame = new Texture("playbtn_w77_h29.png");
-        gameMute = new Texture("playbtn_w77_h29.png");
-        musicMute = new Texture("playbtn_w77_h29.png");
-        settingsBtnTexture = new Texture("settingbtn_w162_h29.png");
+        mutegame = new Texture("PLAY_W84_H28.png");
+        gameMute = new Texture("PLAY_W84_H28.png");
+        musicMute = new Texture("PLAY_W84_H28.png");
+        settingsBtnTexture = new Texture("PLAY_W84_H28.png");
 
         Gdx.input.setInputProcessor(controller);
     }

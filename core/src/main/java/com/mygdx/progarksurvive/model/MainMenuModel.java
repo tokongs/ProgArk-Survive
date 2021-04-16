@@ -20,11 +20,11 @@ public class MainMenuModel {
     }
 
     public void createRectangles(){
-        float playBtnW = 77;
-        float playBtnH = 29;
+        float playBtnW = 84;
+        float playBtnH = 28;
         playBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - playBtnW /2, (float)Gdx.graphics.getHeight()/2- playBtnH /2 + 30);
-        float settingsBtnW = 162;
-        float settingsBtnH = 29;
+        float settingsBtnW = 173;
+        float settingsBtnH = 28;
         settingBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - settingsBtnW /2, (float)Gdx.graphics.getHeight()/2 - settingsBtnH /2 - 30);
 
         playBtnRect = new Rectangle(playBtnPosition.x, playBtnPosition.y , playBtnW, playBtnH);
