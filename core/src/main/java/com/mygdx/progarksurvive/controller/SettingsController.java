@@ -56,6 +56,7 @@ public class SettingsController implements InputProcessor {
         }
         else if(model.getBackToRect().contains(screenX, y)){
             System.out.println("TO THE GAME");
+            game.setState(GameState.GAME);
         }
 
         return false;

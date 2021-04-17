@@ -17,10 +17,12 @@ public class SettingsScreen implements Screen {
     private final SettingsModel model;
     private final SettingsController controller;
 
-    private Texture mutegame;
+    private Texture toMenu;
     private Texture gameMute;
     private Texture musicMute;
-    private Texture settingsBtnTexture;
+    private Texture gameUnmute;
+    private Texture backToGame;
+    private Texture musicUnmute;
 
 
     @Inject
@@ -32,11 +34,12 @@ public class SettingsScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        mutegame = new Texture("PLAY_W84_H28.png");
-        gameMute = new Texture("PLAY_W84_H28.png");
-        musicMute = new Texture("PLAY_W84_H28.png");
-        settingsBtnTexture = new Texture("PLAY_W84_H28.png");
-
+        gameMute = new Texture("MUTESOUNDEFFECTS_W345_H28.png");
+        gameUnmute = new Texture("UNMUTESOUNDEFFECTS_W345_H28.png");
+        musicMute = new Texture("MUTEMUSIC_W166_H28.png");
+        musicUnmute = new Texture("UNMUTEMUSIC_W166_H28.png");
+        toMenu = new Texture("MAINMENU_W217_H28.png");
+        backToGame = new Texture("BACKTOGAME_W151_H81.png");
         Gdx.input.setInputProcessor(controller);
     }
 
@@ -46,20 +49,20 @@ public class SettingsScreen implements Screen {
         Gdx.gl.glClearColor(0,0,0,1);
         batch.begin();
         if(model.isGameVolume()){
-            batch.draw(gameMute,model.getGamePos().x-gameMute.getWidth()/2f, model.getGamePos().y);
+            batch.draw(gameMute,model.getGamePos().x, model.getGamePos().y);
         }
         if(!model.isGameVolume()){
-            batch.draw(settingsBtnTexture,model.getGamePos().x-settingsBtnTexture.getWidth()/2f, model.getGamePos().y);
+            batch.draw(gameUnmute,model.getGamePos().x, model.getGamePos().y);
         }
         if(model.isMusicVolume()){
-            batch.draw(musicMute,model.getMusicPos().x-musicMute.getWidth()/2f, model.getMusicPos().y);
+            batch.draw(musicMute,model.getMusicPos().x, model.getMusicPos().y);
         }
         if(!model.isMusicVolume()){
-            batch.draw(settingsBtnTexture,model.getMusicPos().x-settingsBtnTexture.getWidth()/2f, model.getMusicPos().y);
+            batch.draw(musicUnmute,model.getMusicPos().x, model.getMusicPos().y);
         }
-        batch.draw(mutegame,model.getToMenuPos().x-mutegame.getWidth()/2f, model.getToMenuPos().y);
+        batch.draw(toMenu,model.getToMenuPos().x, model.getToMenuPos().y);
         if(model.isMenuIsParent()){
-            batch.draw(mutegame,model.getBackToGame().x-mutegame.getWidth()/2f, model.getBackToGame().y);
+            batch.draw(backToGame,model.getBackToGame().x, model.getBackToGame().y);
         }
         batch.end();
     }
@@ -88,6 +91,6 @@ public class SettingsScreen implements Screen {
     public void dispose() {
         batch.dispose();
         gameMute.dispose();
-        settingsBtnTexture.dispose();
+        gameUnmute.dispose();
     }
 }

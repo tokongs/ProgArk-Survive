@@ -26,19 +26,27 @@ public class SettingsModel {
     public SettingsModel(){
         this.gameVolume = true;
         this.musicVolume = true;
-        float playBtnW = 180;
+        float playBtnW = 200;
         float playBtnH = 30;
-        this.gamePos = new Vector2((float) Gdx.graphics.getWidth()/2, (float)Gdx.graphics.getHeight()/2- playBtnH /2 + 30);
-        this.musicPos = new Vector2((float) Gdx.graphics.getWidth()/2 , (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 30);
-        this.toMenuPos = new Vector2((float) Gdx.graphics.getWidth()/2 , (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 90);
-        this.backToGame = new Vector2((float) Gdx.graphics.getWidth()/2 , (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 150);
+        float soundW = 345;
+        float musicW = 166;
+        float menuW = 217;
+        float backToGameW = 151;
+        float backToGameH = 81;
 
 
 
-        this.gameRect = new Rectangle(gamePos.x-playBtnW/2f, gamePos.y , playBtnW, playBtnH);
-        this.musicRect = new Rectangle(musicPos.x-playBtnW/2f, musicPos.y , playBtnW, playBtnH);
-        this.toMenuRect = new Rectangle(toMenuPos.x-playBtnW/2f, toMenuPos.y , playBtnW, playBtnH);
-        this.backToRect = new Rectangle(backToGame.x-playBtnW/2f, backToGame.y , playBtnW, playBtnH);
+        this.gamePos = new Vector2((float) Gdx.graphics.getWidth()/2-soundW/2f, (float)Gdx.graphics.getHeight()/2- playBtnH /2 + 30);
+        this.musicPos = new Vector2((float) Gdx.graphics.getWidth()/2 -musicW/2f, (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 30);
+        this.toMenuPos = new Vector2((float) Gdx.graphics.getWidth()/2-menuW/2f , (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 90);
+        this.backToGame = new Vector2((float) Gdx.graphics.getWidth()/2 -backToGameW/2f, (float)Gdx.graphics.getHeight()/2- playBtnH /2 - 210);
+
+
+
+        this.gameRect = new Rectangle(gamePos.x, gamePos.y , soundW, playBtnH);
+        this.musicRect = new Rectangle(musicPos.x, musicPos.y , menuW, playBtnH);
+        this.toMenuRect = new Rectangle(toMenuPos.x, toMenuPos.y , menuW, playBtnH);
+        this.backToRect = new Rectangle(backToGame.x, backToGame.y , backToGameW, backToGameH);
     }
 
 
