@@ -8,28 +8,27 @@ import com.mygdx.progarksurvive.model.entitycomponents.CollisionComponent;
 public class CollisionListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
-        Fixture fa = contact.getFixtureA();
-        Fixture fb = contact.getFixtureB();
-        System.out.printf("Collision detected: %s, %s \n", fa.getBody().getType(), fb.getBody().getType());
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+       // System.out.printf("Collision detected: %s, %s \n", fixtureA.getBody().getType(), fixtureB.getBody().getType());
 
-        if(!(fa.getBody().getUserData() instanceof Entity || fb.getBody().getUserData() instanceof Entity)) return;
+        if(!(fixtureA.getBody().getUserData() instanceof Entity || fixtureB.getBody().getUserData() instanceof Entity)) return;
 
-        Entity e1 = (Entity) fa.getBody().getUserData();
-        Entity e2 = (Entity) fa.getBody().getUserData();
+        Entity entityA = (Entity) fixtureA.getBody().getUserData();
+        Entity entityB = (Entity) fixtureB.getBody().getUserData();
 
-        CollisionComponent c1 = e1.getComponent(CollisionComponent.class);
-        CollisionComponent c2 = e2.getComponent(CollisionComponent.class);
+        CollisionComponent collisionA = entityA.getComponent(CollisionComponent.class);
+        CollisionComponent collisionB = entityB.getComponent(CollisionComponent.class);
 
-        if(c1 == null || c2 == null) return;
+        if(collisionA == null || collisionB == null) return;
 
-        c1.collisionEntity = e2;
-        c2.collisionEntity = e1;
-
+        collisionA.collisionEntity = entityB;
+        collisionB.collisionEntity = entityA;
     }
 
     @Override
     public void endContact(Contact contact) {
-        System.out.printf("End: %s, %s \n", contact.getFixtureA().getBody().getType(), contact.getFixtureB().getBody().getType());
+        //System.out.printf("End: %s, %s \n", contact.getFixtureA().getBody().getType(), contact.getFixtureB().getBody().getType());
     }
 
     @Override

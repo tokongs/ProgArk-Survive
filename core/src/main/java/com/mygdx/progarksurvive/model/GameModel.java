@@ -16,9 +16,10 @@ import com.mygdx.progarksurvive.Wall;
 import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
-import com.mygdx.progarksurvive.model.entitysystems.InputSystem;
 import com.mygdx.progarksurvive.model.entitysystems.PositionSystem;
+import com.mygdx.progarksurvive.model.entitysystems.ProjectileImpactSystem;
 import com.mygdx.progarksurvive.model.entitysystems.RenderSystem;
+import com.mygdx.progarksurvive.model.entitysystems.ShootingSystem;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,24 +34,29 @@ public class GameModel {
 
     public final Player player;
     public List<Entity> enemies = new ArrayList<Entity>();
-    private final World world = new World(new Vector2(0, 0), true);
+    private final World world;
     private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
-
+    private final int wallThickness = 1;
     @Inject
-    public GameModel(Engine ashley, AssetManager assetManager, RenderSystem renderSystem, PositionSystem positionSystem) {
+    public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem, RenderSystem renderSystem, PositionSystem positionSystem, ShootingSystem shootingSystem, World world) {
+        this.world = world;
         world.setContactListener(new CollisionListener());
 
-        player = new Player(new Vector2(30, 30), new Vector2(15, 15), assetManager.get("images/player.png", Texture.class), world);
+        player = new Player(new Vector2(30, 30), new Vector2(5, 5), assetManager.get("images/player.png", Texture.class), world);
 
-        Wall leftWall = new Wall(new Vector2(0, 0), new Vector2(5, worldHeight), Color.BLUE, world);
-        Wall rightWall = new Wall(new Vector2(100 - 5, 0), new Vector2(5, worldHeight), Color.BLUE, world);
-        Wall topWall = new Wall(new Vector2(5, worldHeight - 5), new Vector2(90, 5), Color.BLUE, world);
-        Wall bottomWall = new Wall(new Vector2(5, 0), new Vector2(90, 5), Color.BLUE, world);
+        Wall leftWall = new Wall(new Vector2(0, 0), new Vector2(wallThickness, worldHeight), Color.BLUE, world);
+        Wall rightWall = new Wall(new Vector2(100 - wallThickness, 0), new Vector2(wallThickness, worldHeight), Color.BLUE, world);
+        Wall topWall = new Wall(new Vector2(wallThickness, worldHeight - wallThickness), new Vector2(100-wallThickness, wallThickness), Color.BLUE, world);
+        Wall bottomWall = new Wall(new Vector2(wallThickness, 0), new Vector2(100 - wallThickness, wallThickness), Color.BLUE, world);
+        Wall columnTop = new Wall(new Vector2(50-wallThickness*4, 10+wallThickness*4), new Vector2(wallThickness*8, wallThickness*8), Color.GREEN, world);
+        Wall columnBot = new Wall(new Vector2(50-wallThickness*4, worldHeight-10-(wallThickness*4)), new Vector2(wallThickness*8, wallThickness*8), Color.RED, world);
 
         ashley.addEntity(leftWall.entity);
         ashley.addEntity(rightWall.entity);
         ashley.addEntity(topWall.entity);
         ashley.addEntity(bottomWall.entity);
+        ashley.addEntity(columnTop.entity);
+        ashley.addEntity(columnBot.entity);
         // Entities
         ashley.addEntity(player.entity);
 
@@ -67,6 +73,8 @@ public class GameModel {
         // Systems
         ashley.addSystem(renderSystem);
         ashley.addSystem(positionSystem);
+        ashley.addSystem(shootingSystem);
+        ashley.addSystem(projectileImpactSystem);
     }
 
     public void update() {

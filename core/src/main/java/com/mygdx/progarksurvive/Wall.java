@@ -26,10 +26,10 @@ public class Wall {
         PolygonShape shape = new PolygonShape();
 
         shape.setAsBox(size.x / 2, size.y / 2, new Vector2(size.x / 2, size.y / 2), 0);
+        body.setUserData(entity);
         body.createFixture(shape, 0.0f);
         shape.dispose();
 
-        body.setUserData(entity);
         entity.add(new CollisionComponent());
         entity.add(new ImageComponent(color, size));
         entity.add(new PhysicsBodyComponent(body));

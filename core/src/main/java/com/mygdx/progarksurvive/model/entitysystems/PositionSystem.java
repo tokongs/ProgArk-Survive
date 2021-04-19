@@ -27,6 +27,5 @@ public class PositionSystem extends IteratingSystem {
         PhysicsBodyComponent pbc = entity.getComponent(PhysicsBodyComponent.class);
         PositionComponent pc = entity.getComponent(PositionComponent.class);
         pc.position = pbc.body.getPosition();
-        System.out.printf("X: %f, Y: %f\n", pc.position.x, pc.position.y);
     }
 }
