@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
@@ -27,6 +28,9 @@ public interface GameModule {
 
     @Provides @Singleton
     static SpriteBatch provideSpriteBatch() { return new SpriteBatch(); }
+
+    @Provides @Singleton
+    static ShapeRenderer provideShapeRenderer() { return new ShapeRenderer(); }
 
     @Provides @Singleton
     static Engine provideEngine() {return new Engine(); }

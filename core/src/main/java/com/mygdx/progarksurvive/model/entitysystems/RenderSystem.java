@@ -5,17 +5,10 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.VelocityComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -46,5 +39,6 @@ public class RenderSystem extends EntitySystem {
             }
         }
         batch.end();
+
     }
 }
