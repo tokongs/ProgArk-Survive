@@ -2,6 +2,7 @@ package com.mygdx.progarksurvive;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,6 +11,10 @@ import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.screen.GameScreen;
 import com.mygdx.progarksurvive.screen.LoadingScreen;
+import com.mygdx.progarksurvive.screen.MainMenuScreen;
+import com.mygdx.progarksurvive.screen.SettingsScreen;
+import com.mygdx.progarksurvive.Prefs;
+
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -22,6 +27,9 @@ import java.util.Map;
 public class Main extends com.badlogic.gdx.Game {
 
     private final AssetManager assetManager;
+    private final Prefs prefs;
+    private boolean gameRunning = false;
+
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
@@ -30,12 +38,16 @@ public class Main extends com.badlogic.gdx.Game {
     Lazy<GameScreen> gameScreen;
 
     @Inject
-    Lazy<GameScreen> mainMenuScreen;
+    Lazy<MainMenuScreen> mainMenuScreen;
+
+    @Inject
+    Lazy<SettingsScreen> settingsScreen;
 
     @Inject
     public Main(AssetManager assetManager){
         super();
         this.assetManager = assetManager;
+        this.prefs = new Prefs();
     }
 
     @Override
@@ -55,6 +67,9 @@ public class Main extends com.badlogic.gdx.Game {
 
     public void setState(GameState state){
         switch (state) {
+            case SETTINGS:
+                setScreen(settingsScreen.get());
+                break;
             case LOADING:
                 setScreen(loadingScreen.get());
                 break;
@@ -65,5 +80,15 @@ public class Main extends com.badlogic.gdx.Game {
                 setScreen(gameScreen.get());
                 break;
         }
+    }
+
+    public Prefs getPrefs(){return prefs;}
+
+    public boolean isGameRunning() {
+        return gameRunning;
+    }
+
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
     }
 }
