@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Server;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
@@ -19,6 +21,9 @@ import javax.inject.Singleton;
 
 @Module
 public interface GameModule {
+
+    @Provides @Singleton
+    static SpriteBatch provideSpriteBatch() { return new SpriteBatch(); }
 
     @Provides @Singleton
     static Engine provideEngine() {return new Engine(); }
@@ -37,6 +42,7 @@ public interface GameModule {
     static AssetManager provideAssetManager() {
         AssetManager assetManager = new AssetManager();
         assetManager.load("images/player.png", Texture.class);
+        assetManager.load("skin/uiskin.json", Skin.class);
         return assetManager;
     }
 
