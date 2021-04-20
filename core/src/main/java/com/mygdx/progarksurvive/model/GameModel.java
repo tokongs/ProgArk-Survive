@@ -38,6 +38,7 @@ public class GameModel {
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
                      RenderSystem renderSystem,
+                     HealthSystem healthSystem,
                      PositionSystem positionSystem,
                      PlayerTargetingSystem playerTargetingSystem,
                      ShootingSystem shootingSystem,
@@ -70,6 +71,7 @@ public class GameModel {
         }
         // Systems
         ashley.addSystem(renderSystem);
+        ashley.addSystem(healthSystem);
         ashley.addSystem(positionSystem);
         ashley.addSystem(shootingSystem);
         ashley.addSystem(playerTargetingSystem);

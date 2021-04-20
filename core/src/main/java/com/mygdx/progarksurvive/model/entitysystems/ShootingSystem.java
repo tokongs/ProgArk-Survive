@@ -33,10 +33,19 @@ public class ShootingSystem extends IntervalIteratingSystem {
     @Override
     protected void processEntity(Entity entity) {
         TargetingComponent targeting = entity.getComponent(TargetingComponent.class);
+        PhysicsBodyComponent body = entity.getComponent(PhysicsBodyComponent.class);
+
+        // If player is moving, it should not be shooting
+        if(body.body.getLinearVelocity().x != 0 | body.body.getLinearVelocity().y != 0){targeting.target = null;}
+
         if(targeting.target == null) return;
 
         Vector2 position = new Vector2(entity.getComponent(PhysicsBodyComponent.class).body.getPosition());
         Vector2 direction = new Vector2(targeting.target.getComponent(PhysicsBodyComponent.class).body.getPosition()).sub(position).limit(1);
+
+        // If target is dead, remove target pointer
+        if(targeting.target.getComponent(HealthComponent.class).health < 0){targeting.target = null; return;}
+
         createProjectile(position, direction, entity);
 
     }
