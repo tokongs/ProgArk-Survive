@@ -6,17 +6,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 
-public class Player {
-
+public class Enemy {
     public Entity entity = new Entity();
 
-    public Player(Vector2 position, Vector2 size, Texture texture, World world){
-        entity.add(new PlayerComponent());
+    public Enemy(Vector2 position, Vector2 size, Texture texture, World world){
+        entity.add(new EnemyComponent());
         entity.add(new PositionComponent(position));
         entity.add(new ImageComponent(texture, size));
-        entity.add(new HealthComponent(100));
+        entity.add(new HealthComponent(20));
         entity.add(new CollisionComponent());
-        entity.add(new TargetingComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
     }
 

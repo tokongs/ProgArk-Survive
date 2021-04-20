@@ -11,15 +11,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.progarksurvive.CollisionListener;
+import com.mygdx.progarksurvive.Enemy;
 import com.mygdx.progarksurvive.Player;
 import com.mygdx.progarksurvive.Wall;
 import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
-import com.mygdx.progarksurvive.model.entitysystems.PositionSystem;
-import com.mygdx.progarksurvive.model.entitysystems.ProjectileImpactSystem;
-import com.mygdx.progarksurvive.model.entitysystems.RenderSystem;
-import com.mygdx.progarksurvive.model.entitysystems.ShootingSystem;
+import com.mygdx.progarksurvive.model.entitysystems.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +36,12 @@ public class GameModel {
     private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     private final int wallThickness = 1;
     @Inject
-    public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem, RenderSystem renderSystem, PositionSystem positionSystem, ShootingSystem shootingSystem, World world) {
+    public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
+                     RenderSystem renderSystem,
+                     PositionSystem positionSystem,
+                     PlayerTargetingSystem playerTargetingSystem,
+                     ShootingSystem shootingSystem,
+                     World world) {
         this.world = world;
         world.setContactListener(new CollisionListener());
 
@@ -59,21 +62,17 @@ public class GameModel {
         ashley.addEntity(columnBot.entity);
         // Entities
         ashley.addEntity(player.entity);
-
-        for (int i = 0; i < 10; i++) {
-            enemies.add(new Entity());
-        }
-
         Random rand = new Random();
 
-        enemies.forEach(entity -> entity.add(new PositionComponent(rand.nextFloat() * 100, rand.nextFloat() * 100)));
-        enemies.forEach(entity -> entity.add(new ImageComponent(assetManager.get("images/player.png", Texture.class), new Vector2(5, 5))));
-        enemies.forEach(entity -> entity.add(new HealthComponent(20)));
-        enemies.forEach(ashley::addEntity);
+        for (int i = 0; i < 10; i++) {
+            Enemy enemy = new Enemy(new Vector2(i * 8,  40), new Vector2(2, 2), assetManager.get("images/player.png", Texture.class), world);
+            ashley.addEntity(enemy.entity);
+        }
         // Systems
         ashley.addSystem(renderSystem);
         ashley.addSystem(positionSystem);
         ashley.addSystem(shootingSystem);
+        ashley.addSystem(playerTargetingSystem);
         ashley.addSystem(projectileImpactSystem);
     }
 
