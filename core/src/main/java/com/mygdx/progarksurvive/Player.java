@@ -17,6 +17,7 @@ public class Player {
         entity.add(new HealthComponent(100));
         entity.add(new CollisionComponent());
         entity.add(new TargetingComponent());
+        entity.add(new ScoreComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
     }
 

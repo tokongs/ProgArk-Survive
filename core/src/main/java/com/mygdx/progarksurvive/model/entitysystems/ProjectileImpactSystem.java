@@ -6,10 +6,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.progarksurvive.model.entitycomponents.CollisionComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.ProjectileComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -41,6 +38,7 @@ public class ProjectileImpactSystem extends IteratingSystem {
         HealthComponent hitEntityHealth = collisionComponent.collisionEntity.getComponent(HealthComponent.class);
         if (hitEntityHealth != null) {
             hitEntityHealth.health -= projectileComponent.damage;
+            projectileComponent.shooter.getComponent(ScoreComponent.class).score += 5;
         }
 
         PhysicsBodyComponent phc = entity.getComponent(PhysicsBodyComponent.class);
