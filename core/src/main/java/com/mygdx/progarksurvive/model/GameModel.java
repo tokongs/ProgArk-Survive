@@ -44,6 +44,7 @@ public class GameModel {
                      EnemyTargetingSystem enemyTargetingSystem,
                      EnemyMovementSystem enemyMovementSystem,
                      ShootingSystem shootingSystem,
+                     PlayerDamageSystem playerDamageSystem,
                      World world) {
         this.world = world;
 
@@ -81,6 +82,7 @@ public class GameModel {
         ashley.addSystem(playerTargetingSystem);
         ashley.addSystem(enemyTargetingSystem);
         ashley.addSystem(enemyMovementSystem);
+        ashley.addSystem(playerDamageSystem);
         ashley.addSystem(projectileImpactSystem);
     }
 
@@ -88,8 +90,12 @@ public class GameModel {
         world.step(1 / 60f, 6, 2);
     }
 
-    public int getScore(){
+    public int getPlayerScore(){
         return player.entity.getComponent(ScoreComponent.class).score;
+    }
+
+    public int getPlayerHealth(){
+        return player.entity.getComponent(HealthComponent.class).health;
     }
 
     public void debugRender(Matrix4 projectionMatrix) {

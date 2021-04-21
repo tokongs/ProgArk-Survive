@@ -14,7 +14,7 @@ public class Player {
         entity.add(new PlayerComponent());
         entity.add(new PositionComponent(position));
         entity.add(new ImageComponent(texture, size));
-        entity.add(new HealthComponent(100));
+        entity.add(new HealthComponent(10000));
         entity.add(new CollisionComponent());
         entity.add(new TargetingComponent());
         entity.add(new ScoreComponent());

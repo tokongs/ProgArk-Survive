@@ -2,13 +2,10 @@ package com.mygdx.progarksurvive.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.progarksurvive.controller.GameController;
 import com.mygdx.progarksurvive.model.GameModel;
@@ -45,7 +42,10 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         controller.update(delta, camera);
         batch.begin();
-        font.draw(batch, String.valueOf(model.getScore()), 2, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.setColor(Color.WHITE);
+        font.draw(batch, String.valueOf(model.getPlayerScore()), 2, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.setColor(Color.RED);
+        font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 65, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
         batch.end();
     }
 
