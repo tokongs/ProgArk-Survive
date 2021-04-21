@@ -17,9 +17,6 @@ public class HealthSystem extends IteratingSystem {
     private final World world;
     private final Engine engine;
 
-    ComponentMapper<PhysicsBodyComponent> pbm;
-    ComponentMapper<HealthComponent> hm;
-
     @Inject
     public HealthSystem(Engine engine, World world) {
         super(Family.all(PhysicsBodyComponent.class, HealthComponent.class).get());

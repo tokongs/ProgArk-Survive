@@ -13,11 +13,6 @@ import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
 import javax.inject.Inject;
 
 public class PositionSystem extends IteratingSystem {
-
-
-    ComponentMapper<PhysicsBodyComponent> pbm;
-    ComponentMapper<PositionComponent> pm;
-
     @Inject
     public PositionSystem(){
         super(Family.all(PhysicsBodyComponent.class, PositionComponent.class, ImageComponent.class).get());

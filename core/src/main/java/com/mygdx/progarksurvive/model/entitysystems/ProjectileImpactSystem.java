@@ -16,9 +16,6 @@ public class ProjectileImpactSystem extends IteratingSystem {
 
     private final World world;
     private final Engine engine;
-    ComponentMapper<CollisionComponent> cm;
-    ComponentMapper<ProjectileComponent> pm;
-    ComponentMapper<PhysicsBodyComponent> pbm;
 
     @Inject
     public ProjectileImpactSystem(Engine engine, World world) {
