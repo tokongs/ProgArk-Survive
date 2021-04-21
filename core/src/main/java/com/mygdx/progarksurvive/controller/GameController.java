@@ -41,8 +41,8 @@ public class GameController implements InputProcessor {
     public void update(float delta, Camera camera) {
         movePlayer(camera);
         ashley.update(delta);
-        model.update();
         model.debugRender(camera.combined);
+        model.update();
     }
 
     @Override

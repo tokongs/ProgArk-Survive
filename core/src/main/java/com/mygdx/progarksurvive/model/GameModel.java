@@ -41,6 +41,8 @@ public class GameModel {
                      HealthSystem healthSystem,
                      PositionSystem positionSystem,
                      PlayerTargetingSystem playerTargetingSystem,
+                     EnemyTargetingSystem enemyTargetingSystem,
+                     EnemyMovementSystem enemyMovementSystem,
                      ShootingSystem shootingSystem,
                      World world) {
         this.world = world;
@@ -75,6 +77,8 @@ public class GameModel {
         ashley.addSystem(positionSystem);
         ashley.addSystem(shootingSystem);
         ashley.addSystem(playerTargetingSystem);
+        ashley.addSystem(enemyTargetingSystem);
+        ashley.addSystem(enemyMovementSystem);
         ashley.addSystem(projectileImpactSystem);
     }
 

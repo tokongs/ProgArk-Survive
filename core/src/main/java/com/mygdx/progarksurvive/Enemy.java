@@ -15,6 +15,7 @@ public class Enemy {
         entity.add(new ImageComponent(texture, size));
         entity.add(new HealthComponent(20));
         entity.add(new CollisionComponent());
+        entity.add(new TargetingComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
     }
 

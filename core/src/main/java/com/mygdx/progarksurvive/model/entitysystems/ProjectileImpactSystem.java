@@ -38,8 +38,6 @@ public class ProjectileImpactSystem extends IteratingSystem {
         if (collisionComponent.collisionEntity == null || collisionComponent.collisionEntity == projectileComponent.shooter)
             return;
 
-        //System.out.println(collisionComponent.collisionEntity);
-
         HealthComponent hitEntityHealth = collisionComponent.collisionEntity.getComponent(HealthComponent.class);
         if (hitEntityHealth != null) {
             hitEntityHealth.health -= projectileComponent.damage;
