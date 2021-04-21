@@ -28,7 +28,7 @@ public class MainMenuControllerTest {
     @BeforeAll
     static void setupBeforeAll(){
         Gdx.graphics = mock(Graphics.class);
-        when(Gdx.graphics.getHeight()).thenReturn(1080);
+        when(Gdx.graphics.getWidth()).thenReturn(1080);
         when(Gdx.graphics.getHeight()).thenReturn(768);
     }
 
