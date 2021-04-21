@@ -32,7 +32,7 @@ public class Player {
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(size.x / 2, size.y / 2, new Vector2(size.x / 2, size.y / 2), 0);
+        shape.setAsBox(size.x / 2, size.y / 2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;

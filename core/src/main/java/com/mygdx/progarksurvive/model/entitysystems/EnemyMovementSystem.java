@@ -28,7 +28,7 @@ public class EnemyMovementSystem extends IteratingSystem {
         } else {
             Vector2 position = new Vector2(entity.getComponent(PhysicsBodyComponent.class).body.getPosition());
             Vector2 direction = new Vector2(targeting.target.getComponent(PhysicsBodyComponent.class).body.getPosition()).sub(position).limit(1);
-            body.body.setLinearVelocity(direction.scl(5));
+            body.body.setLinearVelocity(direction.scl(50));
         }
     }
 }

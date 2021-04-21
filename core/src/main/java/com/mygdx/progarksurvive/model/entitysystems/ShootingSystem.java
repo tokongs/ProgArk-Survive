@@ -22,11 +22,11 @@ public class ShootingSystem extends IntervalIteratingSystem {
     private final Engine engine;
     private final Texture texture;
 
-    private final float bulletVelocity = 100f;
+    private final float bulletVelocity = 1000f;
 
     @Inject
     public ShootingSystem(Engine engine, World world, AssetManager assetManager){
-        super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.1f);
+        super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
         texture = assetManager.get("images/player.png", Texture.class);
@@ -65,7 +65,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
         PolygonShape shape = new PolygonShape();
 
-        shape.setAsBox(1f / 2, 1f / 2, new Vector2(1f / 2, 1f / 2), 0);
+        shape.setAsBox(5f / 2, 5f / 2);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
@@ -82,7 +82,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
         entity.add(new CollisionComponent());
         entity.add(new PhysicsBodyComponent(body));
         entity.add(new ProjectileComponent(10, shooter));
-        entity.add(new ImageComponent(texture, new Vector2(1, 1)));
+        entity.add(new ImageComponent(texture, new Vector2(5, 5)));
 
         engine.addEntity(entity);
     }

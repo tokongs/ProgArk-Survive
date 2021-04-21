@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.progarksurvive.controller.GameController;
 import com.mygdx.progarksurvive.model.GameModel;
@@ -18,9 +19,9 @@ public class GameScreen implements Screen {
 
     private final GameController controller;
     private final GameModel model;
-    private final OrthographicCamera camera = new OrthographicCamera(100.0f, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
+    private final OrthographicCamera camera = new OrthographicCamera(1000.0f, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
     private final SpriteBatch batch;
-    BitmapFont font = new BitmapFont();
+    private final BitmapFont font;
 
     @Inject
     public GameScreen(GameController controller, GameModel model, SpriteBatch batch){
@@ -28,6 +29,11 @@ public class GameScreen implements Screen {
         this.model = model;
         this.batch = batch;
         camera.position.set(camera.viewportWidth / 2.0f, camera.viewportHeight / 2.0f, 0.0f);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 40;
+        font = generator.generateFont(parameter);
+        generator.dispose();
     }
 
     @Override
@@ -43,9 +49,9 @@ public class GameScreen implements Screen {
         controller.update(delta, camera);
         batch.begin();
         font.setColor(Color.WHITE);
-        font.draw(batch, String.valueOf(model.getPlayerScore()), 2, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.draw(batch, String.valueOf(model.getPlayerScore()), 2, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
         font.setColor(Color.RED);
-        font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 65, 100.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 900, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
         batch.end();
     }
 
