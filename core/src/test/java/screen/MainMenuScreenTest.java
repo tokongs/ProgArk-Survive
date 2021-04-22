@@ -12,9 +12,5 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class MainMenuScreenTest {
     
-    @Test
-    public void testDispose( SpriteBatch batch) {
-
-
-    }
+   
 }
