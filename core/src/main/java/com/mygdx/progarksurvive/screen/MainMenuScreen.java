@@ -34,8 +34,6 @@ public class MainMenuScreen implements Screen {
         playBtnTexture = new Texture("PLAY_W84_H28.png");
         settingsBtnTexture = new Texture("SETTINGS_W173_H28.png");
 
-        model.createRectangles();
-
         Gdx.input.setInputProcessor(controller);
     }
 
