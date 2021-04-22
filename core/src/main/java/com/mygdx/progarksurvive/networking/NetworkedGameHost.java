@@ -5,6 +5,7 @@ import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Used for creating a game session and interacting with connected clients.
@@ -37,4 +38,6 @@ public interface NetworkedGameHost {
     void setEventHandler(UpdateEventHandler<ClientUpdateEvent> eventHandler);
 
     int numberOfConnections();
+
+    List<Integer> getConnectionIds();
 }

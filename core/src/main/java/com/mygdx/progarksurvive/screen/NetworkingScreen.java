@@ -100,6 +100,7 @@ public class NetworkingScreen implements Screen {
             host.startGameSession(gameSessionNameField.getText());
             statusLabel.setText("Waiting for peers...");
             isHost = true;
+            game.setIsGameHost(true);
         } catch (IOException e) {
             startGameSessionButton.setDisabled(false);
             joinGameSessionButton.setDisabled(false);

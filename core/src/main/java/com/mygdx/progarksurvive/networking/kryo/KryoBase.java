@@ -5,6 +5,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +24,6 @@ public abstract class KryoBase {
         kryo.register(Vector2.class);
         kryo.register(HostUpdateEvent.class);
         kryo.register(ClientUpdateEvent.class);
-        kryo.register(HashMap.class);
+        kryo.register(ArrayList.class);
     }
 }

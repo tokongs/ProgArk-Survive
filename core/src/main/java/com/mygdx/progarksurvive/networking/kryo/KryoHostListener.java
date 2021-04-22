@@ -15,10 +15,9 @@ public class KryoHostListener extends Listener {
 
     @Override
     public void received(Connection connection, Object object) {
+
         if (object instanceof ClientUpdateEvent) {
-            handler.handleEvent((ClientUpdateEvent) object);
-        } else {
-            Gdx.app.debug("HostListener", "Received object of unknown type");
+            handler.handleEvent(connection.getID(), (ClientUpdateEvent) object);
         }
     }
 

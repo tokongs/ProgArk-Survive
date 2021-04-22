@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.model.GameModel;
 import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
 
@@ -17,9 +18,10 @@ public class GameController implements InputProcessor {
     private final GameModel model;
     private float touchX, touchY;
     private boolean touchDown = false;
-
+    private final Main game;
     @Inject
-    public GameController(GameModel model) {
+    public GameController(GameModel model, Main game) {
+        this.game = game;
         this.model = model;
     }
 
@@ -36,7 +38,9 @@ public class GameController implements InputProcessor {
     }
 
     public void update(float delta, Camera camera) {
-        movePlayer(camera);
+        if(game.getIsGameHost()){
+            movePlayer(camera);
+        }
         model.debugRender(camera.combined);
         model.update(delta);
     }

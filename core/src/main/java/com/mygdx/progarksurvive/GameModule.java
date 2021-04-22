@@ -23,8 +23,6 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 
-import javax.inject.Singleton;
-
 @Module
 public interface GameModule {
 

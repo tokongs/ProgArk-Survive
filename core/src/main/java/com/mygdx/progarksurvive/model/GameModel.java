@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,14 +16,18 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.model.entitycomponents.EnemyComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.ScoreComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
+import com.mygdx.progarksurvive.networking.NetworkedGameClient;
+import com.mygdx.progarksurvive.networking.NetworkedGameHost;
+import com.mygdx.progarksurvive.networking.UpdateEventHandler;
+import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class GameModel {
@@ -30,13 +35,18 @@ public class GameModel {
     private final float worldHeight = 1000.0f * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
     private final float worldWidth = 1000.0f;
     public Player player;
+    public Map<Integer, Player> onlinePlayers = new HashMap<>();
     private final World world;
     private final Engine ashley;
+    private final NetworkedGameHost host;
     private final AssetManager assetManager;
     private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     private final Main game;
     private int round = 1;
     private boolean initialized = false;
+
+    private  final SpriteBatch batch;
+    private ClientGameModel clientGameModel;
 
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
@@ -49,25 +59,35 @@ public class GameModel {
                      ShootingSystem shootingSystem,
                      PlayerDamageSystem playerDamageSystem,
                      World world,
-                     Main game) {
+                     Main game,
+                     NetworkedGameHost host,
+                     NetworkedGameClient client,
+                     SpriteBatch batch) {
         this.world = world;
         this.ashley = ashley;
         this.assetManager = assetManager;
         this.game = game;
+        this.host = host;
+        this.batch = batch;
 
-        initialize();
+        if (game.getIsGameHost()) {
+            host.setEventHandler((id, event) -> onlinePlayers.get(id).entity.getComponent(PhysicsBodyComponent.class).body.setTransform(event.playerPosition, 0));
+            initialize();
 
-        world.setContactListener(new CollisionListener());
+            world.setContactListener(new CollisionListener());
 
-        ashley.addSystem(renderSystem);
-        ashley.addSystem(healthSystem);
-        ashley.addSystem(positionSystem);
-        ashley.addSystem(shootingSystem);
-        ashley.addSystem(playerTargetingSystem);
-        ashley.addSystem(enemyTargetingSystem);
-        ashley.addSystem(enemyMovementSystem);
-        ashley.addSystem(playerDamageSystem);
-        ashley.addSystem(projectileImpactSystem);
+            ashley.addSystem(renderSystem);
+            ashley.addSystem(healthSystem);
+            ashley.addSystem(positionSystem);
+            ashley.addSystem(shootingSystem);
+            ashley.addSystem(playerTargetingSystem);
+            ashley.addSystem(enemyTargetingSystem);
+            ashley.addSystem(enemyMovementSystem);
+            ashley.addSystem(playerDamageSystem);
+            ashley.addSystem(projectileImpactSystem);
+        } else {
+            clientGameModel = new ClientGameModel(client, assetManager);
+        }
     }
 
     public void setupMap() {
@@ -99,6 +119,12 @@ public class GameModel {
 
     public void initialize() {
         player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world);
+
+        if(game.getIsGameHost()) {
+            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world)));
+            onlinePlayers.forEach((id, player) -> ashley.addEntity(player.entity));
+        }
+
         ashley.addEntity(player.entity);
         setupMap();
         round = 1;
@@ -106,22 +132,43 @@ public class GameModel {
     }
 
     public void update(float delta) {
-        if (!initialized) {
-            initialize();
-        }
-        if (player.entity.getComponent(HealthComponent.class).health <= 0) {
-            gameOver();
-            return;
-        }
 
-        ImmutableArray<Entity> enemies = ashley.getEntitiesFor(Family.all(EnemyComponent.class).get());
-        if (enemies.size() == 0) {
-            round += 1;
-            initializeGameRound(9 + round);
-        }
 
-        ashley.update(delta);
-        world.step(1 / 60f, 6, 2);
+        if(game.getIsGameHost()){
+            if (!initialized) {
+                initialize();
+            }
+            if (player.entity.getComponent(HealthComponent.class).health <= 0) {
+                gameOver();
+                return;
+            }
+
+            ImmutableArray<Entity> enemies = ashley.getEntitiesFor(Family.all(EnemyComponent.class).get());
+            if (enemies.size() == 0) {
+                round += 1;
+                initializeGameRound(9 + round);
+            }
+
+            List<Vector2> playerPositions = new ArrayList<>();
+            List<Vector2> enemyPositions = new ArrayList<>();
+            List<Vector2> projectilePositions = new ArrayList<>();
+
+            for(Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())){
+                playerPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
+            }
+            for(Entity e : ashley.getEntitiesFor(Family.all(EnemyComponent.class, PhysicsBodyComponent.class).get())){
+                enemyPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
+            }
+            for(Entity e : ashley.getEntitiesFor(Family.all(ProjectileComponent.class, PhysicsBodyComponent.class).get())){
+                projectilePositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
+            }
+
+            host.update(new HostUpdateEvent(playerPositions, enemyPositions, projectilePositions));
+            ashley.update(delta);
+            world.step(1 / 60f, 6, 2);
+        } else {
+            clientGameModel.render(delta, batch);
+        }
     }
 
     public void initializeGameRound(int numEnemies) {
