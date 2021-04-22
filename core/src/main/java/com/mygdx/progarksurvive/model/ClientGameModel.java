@@ -37,15 +37,15 @@ public class ClientGameModel {
     public void render(float delta, SpriteBatch batch){
         batch.begin();
         players.forEach(position -> {
-            batch.draw(playerTexture, position.x, position.y, 50, 50);
+            batch.draw(playerTexture, position.x-25, position.y-25, 50, 50);
         });
 
         enemies.forEach(position -> {
-            batch.draw(enemyTexture, position.x, position.y, 20, 20);
+            batch.draw(enemyTexture, position.x-10, position.y-10, 20, 20);
         });
 
         projectiles.forEach(position -> {
-            batch.draw(projectileTexture, position.x, position.y, 5, 5);
+            batch.draw(projectileTexture, position.x -2.5f, position.y-2.5f, 5, 5);
         });
 
         batch.end();

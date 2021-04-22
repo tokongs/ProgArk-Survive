@@ -20,14 +20,11 @@ import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
-import com.mygdx.progarksurvive.networking.UpdateEventHandler;
-import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Singleton
 public class GameModel {
@@ -45,7 +42,7 @@ public class GameModel {
     private int round = 1;
     private boolean initialized = false;
 
-    private  final SpriteBatch batch;
+    private final SpriteBatch batch;
     private ClientGameModel clientGameModel;
 
     @Inject
@@ -71,7 +68,15 @@ public class GameModel {
         this.batch = batch;
 
         if (game.getIsGameHost()) {
-            host.setEventHandler((id, event) -> onlinePlayers.get(id).entity.getComponent(PhysicsBodyComponent.class).body.setTransform(event.playerPosition, 0));
+            host.setEventHandler((id, event) -> {
+                PhysicsBodyComponent physicsBodyComponent = onlinePlayers.get(id).entity.getComponent(PhysicsBodyComponent.class);
+                if (event.touchDown) {
+                    Vector2 direction = new Vector2(event.touchX - physicsBodyComponent.body.getPosition().x, event.touchY - physicsBodyComponent.body.getPosition().y).limit(1);
+                    physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
+                } else {
+                    physicsBodyComponent.body.setLinearVelocity(new Vector2(0, 0));
+                }
+            });
             initialize();
 
             world.setContactListener(new CollisionListener());
@@ -120,7 +125,7 @@ public class GameModel {
     public void initialize() {
         player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world);
 
-        if(game.getIsGameHost()) {
+        if (game.getIsGameHost()) {
             host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world)));
             onlinePlayers.forEach((id, player) -> ashley.addEntity(player.entity));
         }
@@ -134,7 +139,7 @@ public class GameModel {
     public void update(float delta) {
 
 
-        if(game.getIsGameHost()){
+        if (game.getIsGameHost()) {
             if (!initialized) {
                 initialize();
             }
@@ -153,13 +158,13 @@ public class GameModel {
             List<Vector2> enemyPositions = new ArrayList<>();
             List<Vector2> projectilePositions = new ArrayList<>();
 
-            for(Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())){
+            for (Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())) {
                 playerPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
             }
-            for(Entity e : ashley.getEntitiesFor(Family.all(EnemyComponent.class, PhysicsBodyComponent.class).get())){
+            for (Entity e : ashley.getEntitiesFor(Family.all(EnemyComponent.class, PhysicsBodyComponent.class).get())) {
                 enemyPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
             }
-            for(Entity e : ashley.getEntitiesFor(Family.all(ProjectileComponent.class, PhysicsBodyComponent.class).get())){
+            for (Entity e : ashley.getEntitiesFor(Family.all(ProjectileComponent.class, PhysicsBodyComponent.class).get())) {
                 projectilePositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
             }
 
