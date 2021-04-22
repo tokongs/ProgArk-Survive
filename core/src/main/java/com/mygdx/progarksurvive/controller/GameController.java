@@ -15,14 +15,12 @@ import javax.inject.Singleton;
 public class GameController implements InputProcessor {
 
     private final GameModel model;
-    private final Engine ashley;
     private float touchX, touchY;
     private boolean touchDown = false;
 
     @Inject
-    public GameController(GameModel model, Engine ashley) {
+    public GameController(GameModel model) {
         this.model = model;
-        this.ashley = ashley;
     }
 
     private void movePlayer(Camera camera) {
@@ -30,9 +28,8 @@ public class GameController implements InputProcessor {
         Vector3 touch = camera.unproject(new Vector3(touchX, touchY, 0));
 
         if (touchDown) {
-            physicsBodyComponent.body.setLinearVelocity(
-                    new Vector2(2 * (touch.x - physicsBodyComponent.body.getPosition().x), 2 * (touch.y - physicsBodyComponent.body.getPosition().y))
-            );
+            Vector2 direction = new Vector2(touch.x - physicsBodyComponent.body.getPosition().x, touch.y - physicsBodyComponent.body.getPosition().y).limit(1);
+            physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
         } else {
             physicsBodyComponent.body.setLinearVelocity(new Vector2(0, 0));
         }
@@ -40,9 +37,8 @@ public class GameController implements InputProcessor {
 
     public void update(float delta, Camera camera) {
         movePlayer(camera);
-        ashley.update(delta);
         model.debugRender(camera.combined);
-        model.update();
+        model.update(delta);
     }
 
     @Override
