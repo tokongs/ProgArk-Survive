@@ -10,25 +10,32 @@ import javax.inject.Singleton;
 @Singleton
 public class MainMenuModel {
 
-    private Vector2 playBtnPosition;
-    private Vector2 settingBtnPosition;
+    private final Vector2 playBtnPosition;
+    private final Vector2 settingBtnPosition;
     private Rectangle playBtnRect;
     private Rectangle settingsBtnRect;
 
+    private final float playBtnW = 84;
+    private final float playBtnH = 28;
+    private final float settingsBtnW = 173;
+    private final float settingsBtnH = 28;
+
     @Inject
     public MainMenuModel(){
+        settingBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - settingsBtnW /2, (float)Gdx.graphics.getHeight()/2 - settingsBtnH /2 - 30);
+        playBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - playBtnW /2, (float)Gdx.graphics.getHeight()/2- playBtnH /2 + 30);
+        playBtnRect = createPlayBtnRect();
+        settingsBtnRect = createSettingsBtnRect();
     }
 
-    public void createRectangles(){
-        float playBtnW = 84;
-        float playBtnH = 28;
-        playBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - playBtnW /2, (float)Gdx.graphics.getHeight()/2- playBtnH /2 + 30);
-        float settingsBtnW = 173;
-        float settingsBtnH = 28;
-        settingBtnPosition = new Vector2((float)Gdx.graphics.getWidth()/2 - settingsBtnW /2, (float)Gdx.graphics.getHeight()/2 - settingsBtnH /2 - 30);
-
-        playBtnRect = new Rectangle(playBtnPosition.x, playBtnPosition.y , playBtnW, playBtnH);
+    public Rectangle createSettingsBtnRect(){
         settingsBtnRect = new Rectangle(settingBtnPosition.x, settingBtnPosition.y, settingsBtnW, settingsBtnH);
+        return settingsBtnRect;
+    }
+
+    public Rectangle createPlayBtnRect(){
+        playBtnRect = new Rectangle(playBtnPosition.x, playBtnPosition.y , playBtnW, playBtnH);
+        return playBtnRect;
     }
 
     public Vector2 getPlayBtnPosition() {
