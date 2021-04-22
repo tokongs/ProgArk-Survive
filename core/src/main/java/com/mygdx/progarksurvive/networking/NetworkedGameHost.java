@@ -35,4 +35,6 @@ public interface NetworkedGameHost {
      * @param eventHandler
      */
     void setEventHandler(UpdateEventHandler<ClientUpdateEvent> eventHandler);
+
+    int numberOfConnections();
 }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
@@ -30,13 +31,13 @@ public class NetworkingScreen implements Screen {
     private final Main game;
     private final Stage stage = new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()));
 
-    private Map<String, InetAddress> discoveredGameSession;
-    Skin skin;
-    Table table = new Table();
-    Label statusLabel;
-    TextField gameSessionNameField;
-    TextButton startGameSessionButton;
-    TextButton joinGameSessionButton;
+
+    private boolean isHost = false;
+
+    private final Label statusLabel;
+    private final TextField gameSessionNameField;
+    private final TextButton startGameSessionButton;
+    private final TextButton joinGameSessionButton;
 
     @Inject
     public NetworkingScreen(Main game, NetworkedGameClient client, NetworkedGameHost host, AssetManager assetManager) {
@@ -45,6 +46,7 @@ public class NetworkingScreen implements Screen {
         this.game = game;
         Skin skin = assetManager.get("skin/uiskin.json", Skin.class);
 
+        Table table = new Table();
         table.setFillParent(true);
         stage.addActor(table);
 
@@ -53,6 +55,7 @@ public class NetworkingScreen implements Screen {
         gameSessionNameField = new TextField("", skin);
         startGameSessionButton = new TextButton("Start game session", skin);
         joinGameSessionButton = new TextButton("Join game session", skin);
+        TextButton startGameButton = new TextButton("Start game", skin);
 
         table.add(gameSessionNameLabel).size(100, 80);
         table.add(gameSessionNameField).size(300, 80);
@@ -60,7 +63,9 @@ public class NetworkingScreen implements Screen {
         table.add(startGameSessionButton).size(200, 100).center();
         table.add(joinGameSessionButton).size(200, 100).center();
         table.row();
-        table.add(statusLabel).size(200, 80).colspan(2).center();
+        table.add(statusLabel).size(200, 80).colspan(2);
+        table.row();
+        table.add(startGameButton).size(200, 100).colspan(2);
 
         startGameSessionButton.addListener(new ClickListener() {
             @Override
@@ -78,6 +83,14 @@ public class NetworkingScreen implements Screen {
             }
         });
 
+        startGameButton.addListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setState(GameState.GAME);
+                return false;
+            }
+        });
+
     }
 
     private void onStartGameSessionClick(){
@@ -86,6 +99,7 @@ public class NetworkingScreen implements Screen {
         try {
             host.startGameSession(gameSessionNameField.getText());
             statusLabel.setText("Waiting for peers...");
+            isHost = true;
         } catch (IOException e) {
             startGameSessionButton.setDisabled(false);
             joinGameSessionButton.setDisabled(false);
@@ -96,7 +110,7 @@ public class NetworkingScreen implements Screen {
     private void onJoinGameSessionClick(){
         startGameSessionButton.setDisabled(true);
         joinGameSessionButton.setDisabled(true);
-        discoveredGameSession = client.findGameSessions();
+        Map<String, InetAddress> discoveredGameSession = client.findGameSessions();
         try {
             client.joinGameSession(discoveredGameSession.get(gameSessionNameField.getText()).getHostAddress());
             statusLabel.setText("Waiting for host to start the game...");
@@ -117,6 +131,10 @@ public class NetworkingScreen implements Screen {
         ScreenUtils.clear(Color.BLACK);
         stage.act(delta);
         stage.draw();
+
+        if(isHost && host.numberOfConnections() > 0){
+            statusLabel.setText("Number of connected peers: " + host.numberOfConnections());
+        }
     }
 
     @Override

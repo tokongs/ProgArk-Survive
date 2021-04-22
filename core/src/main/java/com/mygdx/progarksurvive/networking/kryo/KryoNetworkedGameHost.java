@@ -23,6 +23,7 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
     private final Server server;
     private Listener listener;
 
+
     @Inject
     public KryoNetworkedGameHost(Server server){
         this.server = server;
@@ -56,5 +57,10 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
         }
         listener = new KryoHostListener(eventHandler);
         server.addListener(listener);
+    }
+
+    @Override
+    public int numberOfConnections() {
+        return server.getConnections().length;
     }
 }
