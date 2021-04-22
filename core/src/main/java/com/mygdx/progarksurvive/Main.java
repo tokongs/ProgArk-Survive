@@ -9,10 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
-import com.mygdx.progarksurvive.screen.GameScreen;
-import com.mygdx.progarksurvive.screen.LoadingScreen;
-import com.mygdx.progarksurvive.screen.MainMenuScreen;
-import com.mygdx.progarksurvive.screen.SettingsScreen;
+import com.mygdx.progarksurvive.screen.*;
 import com.mygdx.progarksurvive.Prefs;
 
 import dagger.Lazy;
@@ -26,10 +23,8 @@ import java.util.Map;
 @Singleton
 public class Main extends com.badlogic.gdx.Game {
 
-    private final AssetManager assetManager;
     private final Prefs prefs;
     private boolean gameRunning = false;
-
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
@@ -44,9 +39,11 @@ public class Main extends com.badlogic.gdx.Game {
     Lazy<SettingsScreen> settingsScreen;
 
     @Inject
-    public Main(AssetManager assetManager){
+    Lazy<NetworkingScreen> networkingScreen;
+
+    @Inject
+    public Main(){
         super();
-        this.assetManager = assetManager;
         this.prefs = new Prefs();
     }
 
@@ -75,6 +72,9 @@ public class Main extends com.badlogic.gdx.Game {
                 break;
             case MAIN_MENU:
                 setScreen(mainMenuScreen.get());
+                break;
+            case NETWORKING:
+                setScreen(networkingScreen.get());
                 break;
             case GAME:
                 setScreen(gameScreen.get());

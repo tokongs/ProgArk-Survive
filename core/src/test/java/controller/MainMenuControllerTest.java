@@ -48,7 +48,7 @@ public class MainMenuControllerTest {
         MainMenuController controller = new MainMenuController(model, game);
         assertFalse(controller.touchDown(300, 768 - 300, 0,0));
         verify(game, times(0)).setState(GameState.SETTINGS);
-        verify(game, times(0)).setState(GameState.GAME);
+        verify(game, times(0)).setState(GameState.NETWORKING);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class MainMenuControllerTest {
         MainMenuController controller = new MainMenuController(model, game);
         assertFalse(controller.touchDown(300, 768 - 300, 0,0));
         controller.touchDown(20, 768 - 20, 0, 0);
-        verify(game, times(1)).setState(GameState.GAME);
+        verify(game, times(1)).setState(GameState.NETWORKING);
         verify(game, times(0)).setState(GameState.SETTINGS);
     }
 
@@ -65,7 +65,7 @@ public class MainMenuControllerTest {
         MainMenuController controller = new MainMenuController(model, game);
         assertFalse(controller.touchDown(300, 768 - 300, 0,0));
         controller.touchDown(120, 768 - 120, 0, 0);
-        verify(game, times(0)).setState(GameState.GAME);
+        verify(game, times(0)).setState(GameState.NETWORKING);
         verify(game, times(1)).setState(GameState.SETTINGS);
     }
 

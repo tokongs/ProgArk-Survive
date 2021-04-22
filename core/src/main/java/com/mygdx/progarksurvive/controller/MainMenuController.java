@@ -40,7 +40,7 @@ public class MainMenuController implements InputProcessor {
         int y = Gdx.graphics.getHeight() - screenY;
         if(model.getPlayBtnRect().contains(screenX, y)){
             System.out.println("game screen");
-            game.setState(GameState.GAME);
+            game.setState(GameState.NETWORKING);
         }
         else if(model.getSettingsBtnRect().contains(screenX, y)){
             System.out.println("settingscreen");
