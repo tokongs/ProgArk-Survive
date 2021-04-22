@@ -15,13 +15,13 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.model.entitycomponents.*;
+import com.mygdx.progarksurvive.model.entitycomponents.EnemyComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.ScoreComponent;
 import com.mygdx.progarksurvive.model.entitysystems.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 @Singleton
@@ -37,6 +37,7 @@ public class GameModel {
     private final Main game;
     private int round = 1;
     private boolean initialized = false;
+
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
                      RenderSystem renderSystem,
@@ -69,15 +70,15 @@ public class GameModel {
         ashley.addSystem(projectileImpactSystem);
     }
 
-    public void setupMap(){
+    public void setupMap() {
         int wallThickness = 10;
         Wall leftWall = new Wall(new Vector2(wallThickness / 2f, worldHeight / 2f), new Vector2(wallThickness, worldHeight), Color.BLUE, world);
         Wall rightWall = new Wall(new Vector2(worldWidth - wallThickness / 2f, worldHeight / 2f), new Vector2(wallThickness, worldHeight), Color.BLUE, world);
         Wall topWall = new Wall(new Vector2(worldWidth / 2f + wallThickness / 2f, worldHeight - wallThickness / 2f), new Vector2(worldWidth - wallThickness, wallThickness), Color.BLUE, world);
         Wall bottomWall = new Wall(new Vector2(worldWidth / 2f + wallThickness / 2f, wallThickness / 2f), new Vector2(worldWidth - wallThickness, wallThickness), Color.BLUE, world);
 
-        Wall columnTop = new Wall(new Vector2(500- wallThickness *4, 100+ wallThickness *4), new Vector2(wallThickness *8, wallThickness *8), Color.GREEN, world);
-        Wall columnBot = new Wall(new Vector2(500- wallThickness *4, worldHeight-100-(wallThickness *4)), new Vector2(wallThickness *8, wallThickness *8), Color.RED, world);
+        Wall columnTop = new Wall(new Vector2(500 - wallThickness * 4, 100 + wallThickness * 4), new Vector2(wallThickness * 8, wallThickness * 8), Color.GREEN, world);
+        Wall columnBot = new Wall(new Vector2(500 - wallThickness * 4, worldHeight - 100 - (wallThickness * 4)), new Vector2(wallThickness * 8, wallThickness * 8), Color.RED, world);
 
         ashley.addEntity(leftWall.entity);
         ashley.addEntity(rightWall.entity);
@@ -87,7 +88,7 @@ public class GameModel {
         ashley.addEntity(columnBot.entity);
     }
 
-    public void gameOver(){
+    public void gameOver() {
         ashley.removeAllEntities();
         Array<Body> bodies = new Array<Body>();
         world.getBodies(bodies);
@@ -96,7 +97,7 @@ public class GameModel {
         game.setState(GameState.MAIN_MENU);
     }
 
-    public void initialize(){
+    public void initialize() {
         player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world);
         ashley.addEntity(player.entity);
         setupMap();
@@ -105,37 +106,39 @@ public class GameModel {
     }
 
     public void update(float delta) {
-        if(!initialized){
+        if (!initialized) {
             initialize();
         }
-        if(player.entity.getComponent(HealthComponent.class).health <= 0) {
+        if (player.entity.getComponent(HealthComponent.class).health <= 0) {
             gameOver();
             return;
         }
 
         ImmutableArray<Entity> enemies = ashley.getEntitiesFor(Family.all(EnemyComponent.class).get());
-        if(enemies.size() == 0){
+        if (enemies.size() == 0) {
             round += 1;
-            initializeGameRound(10);
+            initializeGameRound(9 + round);
         }
 
         ashley.update(delta);
         world.step(1 / 60f, 6, 2);
     }
 
-    public void initializeGameRound(int numEnemies){
+    public void initializeGameRound(int numEnemies) {
         Texture enemyTexture = assetManager.get("images/player.png", Texture.class);
+        Random rand = new Random();
         for (int i = 0; i < numEnemies; i++) {
-            Enemy enemy = new Enemy(new Vector2((i+1) * 80,  400), new Vector2(20, 20), enemyTexture, world);
+            Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
+            Enemy enemy = new Enemy(position, new Vector2(20, 20), enemyTexture, world);
             ashley.addEntity(enemy.entity);
         }
     }
 
-    public int getPlayerScore(){
+    public int getPlayerScore() {
         return player.entity.getComponent(ScoreComponent.class).score;
     }
 
-    public int getPlayerHealth(){
+    public int getPlayerHealth() {
         return player.entity.getComponent(HealthComponent.class).health;
     }
 
