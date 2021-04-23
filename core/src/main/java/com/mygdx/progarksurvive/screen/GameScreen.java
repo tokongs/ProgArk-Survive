@@ -49,9 +49,9 @@ public class GameScreen implements Screen {
         controller.update(delta, camera);
         batch.begin();
         font.setColor(Color.WHITE);
-    //    font.draw(batch, String.valueOf(model.getPlayerScore()), 2, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.draw(batch, String.valueOf(model.getPlayerScore()), 2, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
         font.setColor(Color.RED);
-     //   font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 900, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
+        font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 900, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 4);
         batch.end();
     }
 

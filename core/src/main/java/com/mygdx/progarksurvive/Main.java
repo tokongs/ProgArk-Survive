@@ -29,6 +29,9 @@ public class Main extends com.badlogic.gdx.Game {
     Lazy<NetworkingScreen> networkingScreen;
 
     @Inject
+    Lazy<GameOverScreen> gameOverScreen;
+
+    @Inject
     public Main() {
         super();
         this.prefs = new Prefs();
@@ -58,13 +61,16 @@ public class Main extends com.badlogic.gdx.Game {
                 setScreen(loadingScreen.get());
                 break;
             case MAIN_MENU:
-                setScreen(mainMenuScreen.get());
+                setScreen(gameOverScreen.get());
                 break;
             case NETWORKING:
                 setScreen(networkingScreen.get());
                 break;
             case GAME:
                 setScreen(gameScreen.get());
+                break;
+            case GAME_OVER:
+                setScreen(gameOverScreen.get());
                 break;
         }
     }

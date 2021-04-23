@@ -20,6 +20,7 @@ import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
+import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
@@ -91,7 +92,7 @@ public class GameModel {
             ashley.addSystem(playerDamageSystem);
             ashley.addSystem(projectileImpactSystem);
         } else {
-            clientGameModel = new ClientGameModel(client, assetManager);
+            clientGameModel = new ClientGameModel(client, assetManager, game);
         }
     }
 
@@ -119,7 +120,7 @@ public class GameModel {
         world.getBodies(bodies);
         bodies.forEach(world::destroyBody);
         initialized = false;
-        game.setState(GameState.MAIN_MENU);
+        game.setState(GameState.GAME_OVER);
     }
 
     public void initialize() {
@@ -143,11 +144,6 @@ public class GameModel {
             if (!initialized) {
                 initialize();
             }
-            if (player.entity.getComponent(HealthComponent.class).health <= 0) {
-                gameOver();
-                return;
-            }
-
             ImmutableArray<Entity> enemies = ashley.getEntitiesFor(Family.all(EnemyComponent.class).get());
             if (enemies.size() == 0) {
                 round += 1;
@@ -157,6 +153,8 @@ public class GameModel {
             List<Vector2> playerPositions = new ArrayList<>();
             List<Vector2> enemyPositions = new ArrayList<>();
             List<Vector2> projectilePositions = new ArrayList<>();
+            Map<Integer, Integer> playerHealth = new HashMap<>();
+            Map<Integer, Integer> playerScore = new HashMap<>();
 
             for (Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())) {
                 playerPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
@@ -168,9 +166,25 @@ public class GameModel {
                 projectilePositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
             }
 
-            host.update(new HostUpdateEvent(playerPositions, enemyPositions, projectilePositions));
+            boolean deadPlayers = false;
+            for(Integer id: onlinePlayers.keySet()) {
+                Entity entity = onlinePlayers.get(id).entity;
+                int health = entity.getComponent(HealthComponent.class).health;
+                if(health <= 0){
+                    deadPlayers = true;
+                }
+                playerHealth.put(id, health);
+                playerScore.put(id, entity.getComponent(ScoreComponent.class).score);
+            }
+            if(deadPlayers || player.entity.getComponent(HealthComponent.class).health <= 0){
+                host.update(new GameOverEvent(round, playerScore, playerHealth));
+                gameOver();
+            }
+
+            host.update(new HostUpdateEvent(playerPositions, enemyPositions, projectilePositions, playerHealth, playerScore));
             ashley.update(delta);
             world.step(1 / 60f, 6, 2);
+
         } else {
             clientGameModel.render(delta, batch);
         }
@@ -187,11 +201,24 @@ public class GameModel {
     }
 
     public int getPlayerScore() {
-        return player.entity.getComponent(ScoreComponent.class).score;
+        if(game.getIsGameHost()){
+            return player.entity.getComponent(ScoreComponent.class).score;
+        }
+        return clientGameModel.getScore();
     }
 
     public int getPlayerHealth() {
-        return player.entity.getComponent(HealthComponent.class).health;
+        if(game.getIsGameHost()){
+            return player.entity.getComponent(HealthComponent.class).health;
+        }
+        return clientGameModel.getHealth();
+    }
+
+    public int getRound() {
+        if(game.getIsGameHost()){
+            return round;
+        }
+        return clientGameModel.getRound();
     }
 
     public void debugRender(Matrix4 projectionMatrix) {

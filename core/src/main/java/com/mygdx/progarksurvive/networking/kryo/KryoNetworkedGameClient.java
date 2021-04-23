@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     @Override
     public void joinGameSession(String address) throws IOException {
         client.connect(5000, address, TCP_PORT, UDP_PORT);
+        System.out.println(client.getID());
     }
 
     @Override
@@ -49,7 +51,7 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     }
 
     @Override
-    public void setEventHandler(UpdateEventHandler<HostUpdateEvent> eventHandler) {
+    public void setEventHandler(UpdateEventHandler<HostNetworkEvent> eventHandler) {
         if (listener != null) {
             client.removeListener(listener);
             listener = null;

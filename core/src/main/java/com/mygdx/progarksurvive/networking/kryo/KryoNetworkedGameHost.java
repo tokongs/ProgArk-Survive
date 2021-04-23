@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.*;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
@@ -47,7 +48,7 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
     }
 
     @Override
-    public void update(HostUpdateEvent event) {
+    public void update(HostNetworkEvent event) {
         server.sendToAllTCP(event);
     }
 
