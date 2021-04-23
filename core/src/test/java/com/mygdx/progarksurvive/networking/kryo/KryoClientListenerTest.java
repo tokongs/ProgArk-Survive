@@ -6,6 +6,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,8 +23,8 @@ import static org.mockito.Mockito.*;
 class KryoClientListenerTest {
 
     @Test
-    void testReceived(@Mock UpdateEventHandler<HostUpdateEvent> handler,
-                      @Mock HostUpdateEvent event,
+    void testReceived(@Mock UpdateEventHandler<HostNetworkEvent> handler,
+                      @Mock HostNetworkEvent event,
                       @Mock Connection connection,
                       @Mock ClientUpdateEvent notHostUpdateEvent) {
 
@@ -41,8 +42,8 @@ class KryoClientListenerTest {
     }
 
     @Test
-    void testEquals(@Mock UpdateEventHandler<HostUpdateEvent> handler1,
-                    @Mock UpdateEventHandler<HostUpdateEvent> handler2) {
+    void testEquals(@Mock UpdateEventHandler<HostNetworkEvent> handler1,
+                    @Mock UpdateEventHandler<HostNetworkEvent> handler2) {
 
         KryoClientListener listener1 = new KryoClientListener(handler1);
         KryoClientListener listener2 = new KryoClientListener(handler2);

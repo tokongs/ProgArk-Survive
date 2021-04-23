@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,7 +61,7 @@ class KryoNetworkedGameClientTest {
     }
 
     @Test
-    void testSetEventHandler(@Mock UpdateEventHandler<HostUpdateEvent> handler1, @Mock UpdateEventHandler<HostUpdateEvent> handler2) {
+    void testSetEventHandler(@Mock UpdateEventHandler<HostNetworkEvent> handler1, @Mock UpdateEventHandler<HostNetworkEvent> handler2) {
         KryoNetworkedGameClient kryoClient = new KryoNetworkedGameClient(client, discoveryHandler);
         kryoClient.setEventHandler(handler1);
 

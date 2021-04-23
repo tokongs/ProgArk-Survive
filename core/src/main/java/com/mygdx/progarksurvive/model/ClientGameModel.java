@@ -47,7 +47,6 @@ public class ClientGameModel {
         enemyTexture = assetManager.get("images/player.png", Texture.class);
         projectileTexture = assetManager.get("images/player.png", Texture.class);
 
-
         client.setEventHandler((id, event) -> {
             if(event instanceof HostUpdateEvent){
                 HostUpdateEvent e = (HostUpdateEvent) event;

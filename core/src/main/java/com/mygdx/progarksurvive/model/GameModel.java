@@ -42,6 +42,7 @@ public class GameModel {
     private boolean initialized = false;
 
     private ClientGameModel clientGameModel;
+    private final NetworkedGameClient networkedGameClient;
 
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
@@ -56,13 +57,13 @@ public class GameModel {
                      World world,
                      Main game,
                      NetworkedGameHost host,
-                     NetworkedGameClient client,
-                     SpriteBatch batch) {
+                     NetworkedGameClient client) {
         this.world = world;
         this.ashley = ashley;
         this.assetManager = assetManager;
         this.game = game;
         this.host = host;
+        this.networkedGameClient = client;
 
         if (game.getIsGameHost()) {
             host.setEventHandler((id, event) -> {
@@ -142,6 +143,7 @@ public class GameModel {
         ashley.addEntity(player.entity);
         setupMap();
         round = 0;
+        clientGameModel = new ClientGameModel(networkedGameClient,  assetManager, game);
         initialized = true;
     }
 
