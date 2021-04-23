@@ -28,7 +28,6 @@ import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-@Singleton
 public class GameOverScreen implements Screen {
 
     private final GameModel model;

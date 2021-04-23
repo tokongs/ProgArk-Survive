@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.progarksurvive.GameState;
@@ -24,7 +25,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Map;
 
-@Singleton
 public class NetworkingScreen implements Screen {
 
     private final NetworkedGameClient client;
@@ -40,6 +40,7 @@ public class NetworkingScreen implements Screen {
     private final TextField gameSessionNameField;
     private final TextButton startGameSessionButton;
     private final TextButton joinGameSessionButton;
+    private final TextButton startGameButton;
 
     @Inject
     public NetworkingScreen(Main game, NetworkedGameClient client, NetworkedGameHost host, AssetManager assetManager) {
@@ -57,17 +58,18 @@ public class NetworkingScreen implements Screen {
         gameSessionNameField = new TextField("", skin);
         startGameSessionButton = new TextButton("Start game session", skin);
         joinGameSessionButton = new TextButton("Join game session", skin);
-        TextButton startGameButton = new TextButton("Start game", skin);
+        startGameButton = new TextButton("Start game", skin);
 
-        table.add(gameSessionNameLabel).size(100, 80);
-        table.add(gameSessionNameField).size(300, 80);
-        table.row();
-        table.add(startGameSessionButton).size(200, 100).center();
-        table.add(joinGameSessionButton).size(200, 100).center();
-        table.row();
-        table.add(statusLabel).size(200, 80).colspan(2);
-        table.row();
+        table.add(gameSessionNameLabel).size(200, 80);
+        table.add(gameSessionNameField).size(200, 80);
+        table.row().padTop(20);
+        table.add(startGameSessionButton).size(190, 100).padRight(20);
+        table.add(joinGameSessionButton).size(190, 100);
+        table.row().padTop(20);
         table.add(startGameButton).size(200, 100).colspan(2);
+        table.row();
+        table.add(statusLabel).size(200, 80).colspan(2).align(Align.center);
+
 
         startGameSessionButton.addListener(new ClickListener() {
             @Override
@@ -92,7 +94,6 @@ public class NetworkingScreen implements Screen {
                 return false;
             }
         });
-
     }
 
     private void onStartGameClick(){
@@ -103,45 +104,55 @@ public class NetworkingScreen implements Screen {
     }
 
     private void onStartGameSessionClick(){
-        startGameSessionButton.setDisabled(true);
-        joinGameSessionButton.setDisabled(true);
+        if(host.isActive() || client.isActive()){
+            return;
+        }
         try {
             host.startGameSession(gameSessionNameField.getText());
             statusLabel.setText("Waiting for peers...");
             isHost = true;
             game.setIsGameHost(true);
+            gameSessionNameField.setDisabled(true);
         } catch (IOException e) {
-            startGameSessionButton.setDisabled(false);
-            joinGameSessionButton.setDisabled(false);
+            statusLabel.setText("Unable to start game session!");
             e.printStackTrace();
         }
     }
 
     private void onJoinGameSessionClick(){
-        startGameSessionButton.setDisabled(true);
-        joinGameSessionButton.setDisabled(true);
-        Map<String, InetAddress> discoveredGameSession = client.findGameSessions();
-        try {
-            statusLabel.setText("Searching for host...");
-            client.joinGameSession(discoveredGameSession.get(gameSessionNameField.getText()).getHostAddress());
-            isHost = false;
-            game.setIsGameHost(false);
-            statusLabel.setText("Waiting for host to start the game...");
-            client.setEventHandler((Id, event) -> {
-                if(event instanceof GameStartEvent){
-                    game.setState(GameState.GAME);
-                }
-            });
-        } catch (Exception e) {
-            startGameSessionButton.setDisabled(false);
-            joinGameSessionButton.setDisabled(false);
-            e.printStackTrace();
+        if(host.isActive() || client.isActive()){
+            return;
         }
+
+        statusLabel.setText("Searching for host...");
+        new Thread(() -> {
+            client.leaveGameSession();
+            startGameButton.setVisible(false);
+
+            try {
+                Map<String, InetAddress> discoveredGameSession = client.findGameSessions();
+
+                client.joinGameSession(discoveredGameSession.get(gameSessionNameField.getText()).getHostAddress());
+                isHost = false;
+                game.setIsGameHost(false);
+                statusLabel.setText("Waiting for host to start the game...");
+                client.setEventHandler((Id, event) -> {
+                    if(event instanceof GameStartEvent){
+                        game.setState(GameState.GAME);
+                    }
+                });
+                gameSessionNameField.setDisabled(true);
+            } catch (Exception e) {
+                statusLabel.setText("Unable to join game session!");
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        statusLabel.setText("");
     }
 
     @Override

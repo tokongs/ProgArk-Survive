@@ -120,6 +120,9 @@ public class GameModel {
         bodies.forEach(world::destroyBody);
         initialized = false;
         game.setState(GameState.GAME_OVER);
+        if(host.isActive()){
+            host.stopGameSession();
+        }
     }
 
     public void initialize() {

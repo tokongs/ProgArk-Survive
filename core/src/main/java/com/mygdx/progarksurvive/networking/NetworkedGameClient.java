@@ -43,4 +43,6 @@ public interface NetworkedGameClient {
      */
     void setEventHandler(UpdateEventHandler<HostNetworkEvent> eventHandler);
 
+    boolean isActive();
+
 }

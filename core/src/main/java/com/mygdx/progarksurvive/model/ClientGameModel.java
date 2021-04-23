@@ -60,6 +60,7 @@ public class ClientGameModel {
                 score = e.score.get(id);
                 round = e.round;
                 game.setState(GameState.GAME_OVER);
+                client.leaveGameSession();
             }
 
         });

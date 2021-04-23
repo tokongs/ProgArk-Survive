@@ -21,6 +21,7 @@ import java.util.Map;
 public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameClient {
 
     private KryoClientListener listener = null;
+    private boolean active = false;
     KryoClientDiscoveryHandler discoveryHandler;
 
     Client client;
@@ -37,12 +38,13 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     @Override
     public void joinGameSession(String address) throws IOException {
         client.connect(5000, address, TCP_PORT, UDP_PORT);
-        System.out.println(client.getID());
+        active = true;
     }
 
     @Override
     public void leaveGameSession() {
         client.close();
+        active = false;
     }
 
     @Override
@@ -58,6 +60,11 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
         }
         listener = new KryoClientListener(eventHandler);
         client.addListener(listener);
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 
     @Override
