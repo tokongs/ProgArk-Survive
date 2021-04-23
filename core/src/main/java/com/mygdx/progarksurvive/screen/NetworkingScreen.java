@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -15,6 +16,7 @@ import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
+import com.mygdx.progarksurvive.networking.events.GameStartEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,7 +34,7 @@ public class NetworkingScreen implements Screen {
     private final Stage stage = new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()));
 
 
-    private boolean isHost = false;
+    private boolean isHost = true;
 
     private final Label statusLabel;
     private final TextField gameSessionNameField;
@@ -86,11 +88,18 @@ public class NetworkingScreen implements Screen {
         startGameButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                game.setState(GameState.GAME);
+                onStartGameClick();
                 return false;
             }
         });
 
+    }
+
+    private void onStartGameClick(){
+        game.setState(GameState.GAME);
+        if(host.isActive()){
+            host.update(new GameStartEvent());
+        }
     }
 
     private void onStartGameSessionClick(){
@@ -113,8 +122,16 @@ public class NetworkingScreen implements Screen {
         joinGameSessionButton.setDisabled(true);
         Map<String, InetAddress> discoveredGameSession = client.findGameSessions();
         try {
+            statusLabel.setText("Searching for host...");
             client.joinGameSession(discoveredGameSession.get(gameSessionNameField.getText()).getHostAddress());
+            isHost = false;
+            game.setIsGameHost(false);
             statusLabel.setText("Waiting for host to start the game...");
+            client.setEventHandler((Id, event) -> {
+                if(event instanceof GameStartEvent){
+                    game.setState(GameState.GAME);
+                }
+            });
         } catch (Exception e) {
             startGameSessionButton.setDisabled(false);
             joinGameSessionButton.setDisabled(false);

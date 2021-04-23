@@ -10,14 +10,18 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.mygdx.progarksurvive.GameState;
+import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.model.GameModel;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 
@@ -28,15 +32,8 @@ import javax.inject.Singleton;
 public class GameOverScreen implements Screen {
 
     private final GameModel model;
-    private final SpriteBatch batch;
-    private final OrthographicCamera camera = new OrthographicCamera(1000.0f, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
-    private final BitmapFont font;
 
-    private int round = 0;
-    private int score = 0;
-    private int health = 0;
-
-    private final Stage stage = new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()));;
+    private final Stage stage;
     private final TextButton mainMenuButton;
     private final Label scoreLabel;
     private final Label healthLabel;
@@ -46,17 +43,12 @@ public class GameOverScreen implements Screen {
     private final Label roundValueLabel;
 
     @Inject
-    public GameOverScreen(GameModel model, SpriteBatch batch, AssetManager assetManager){
+    public GameOverScreen(GameModel model, AssetManager assetManager, Main game, SpriteBatch batch){
         this.model = model;
-        this.batch = batch;
-        camera.position.set(camera.viewportWidth / 2.0f, camera.viewportHeight / 2.0f, 0.0f);
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("UbuntuMono-Regular.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40;
-        font = generator.generateFont(parameter);
-        generator.dispose();
 
         Skin skin = assetManager.get("skin/uiskin.json", Skin.class);
+
+        stage =  new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()), batch);
 
         scoreLabel = createLabel("Score", skin);
         roundLabel = createLabel("Round", skin);
@@ -66,22 +58,33 @@ public class GameOverScreen implements Screen {
         roundValueLabel = createLabel(": 0", skin);
         healthValueLabel = createLabel(": 0", skin);
 
+
         mainMenuButton = new TextButton("Back to main menu", skin);
+
+        mainMenuButton.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                game.setState(GameState.MAIN_MENU);
+                return false;
+            }
+        });
+
         Table table = new Table();
         table.setFillParent(true);
+
         table.add(scoreLabel).size(280, 60);
-        table.add(scoreValueLabel);
+        table.add(scoreValueLabel).size(100, 60);
 
         table.row();
         table.add(roundLabel).size(280, 60);
-        table.add(roundValueLabel);
+        table.add(roundValueLabel).size(100, 60);
 
         table.row();
         table.add(healthLabel).size(280, 60);
-        table.add(healthValueLabel);
+        table.add(healthValueLabel).size(100, 60);
 
         table.row();
-        table.add(mainMenuButton).size(200, 100).padTop(50);
+        table.add(mainMenuButton).size(200, 100).padTop(50).colspan(2);
 
         stage.addActor(table);
     }
@@ -91,12 +94,13 @@ public class GameOverScreen implements Screen {
         label.setFontScaleX(2);
         label.setFontScaleY(2);
         label.setColor(Color.GREEN);
+        label.setAlignment(Align.left);
         return label;
     }
 
     private void setText(){
         scoreValueLabel.setText(": " + model.getPlayerScore());
-        healthValueLabel.setText(": " + model.getPlayerHealth());
+        healthValueLabel.setText(": " + Math.max(0, model.getPlayerHealth() / 100));
         roundValueLabel.setText(": " + model.getRound());
     }
 
@@ -109,14 +113,6 @@ public class GameOverScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        font.setColor(Color.GREEN);
-        //font.draw(batch, "Score            : " + score, (1000 / 2f) - 160, 620.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
-        //font.draw(batch, "Round            : " + round, (1000 / 2f) - 160, 520.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
-       // font.draw(batch, "Remaining health : " + health, (1000 / 2f) - 160, 420.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
-        batch.end();
         stage.act();
         stage.draw();
     }

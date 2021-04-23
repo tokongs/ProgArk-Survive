@@ -1,6 +1,5 @@
 package com.mygdx.progarksurvive.model;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,11 +9,12 @@ import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
-import com.mygdx.progarksurvive.screen.GameOverScreen;
 
+import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 
+@Singleton
 public class ClientGameModel {
 
     private List<Vector2> players = new ArrayList<>();

@@ -2,10 +2,7 @@ package com.mygdx.progarksurvive.networking.kryo;
 
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
-import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
-import com.mygdx.progarksurvive.networking.events.GameOverEvent;
-import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
-import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +23,7 @@ public abstract class KryoBase {
         kryo.register(Vector2.class);
         kryo.register(HostNetworkEvent.class);
         kryo.register(HostUpdateEvent.class);
+        kryo.register(GameStartEvent.class);
         kryo.register(ClientUpdateEvent.class);
         kryo.register(GameOverEvent.class);
         kryo.register(ArrayList.class);

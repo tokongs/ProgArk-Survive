@@ -41,4 +41,6 @@ public interface NetworkedGameHost {
     int numberOfConnections();
 
     List<Integer> getConnectionIds();
+
+    boolean isActive();
 }

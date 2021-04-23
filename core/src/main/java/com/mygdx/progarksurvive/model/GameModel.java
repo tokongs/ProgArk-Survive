@@ -38,9 +38,8 @@ public class GameModel {
     private final Engine ashley;
     private final NetworkedGameHost host;
     private final AssetManager assetManager;
-    private final Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     private final Main game;
-    private int round = 1;
+    private int round = 0;
     private boolean initialized = false;
 
     private final SpriteBatch batch;
@@ -133,7 +132,7 @@ public class GameModel {
 
         ashley.addEntity(player.entity);
         setupMap();
-        round = 1;
+        round = 0;
         initialized = true;
     }
 
@@ -219,9 +218,5 @@ public class GameModel {
             return round;
         }
         return clientGameModel.getRound();
-    }
-
-    public void debugRender(Matrix4 projectionMatrix) {
-        debugRenderer.render(world, projectionMatrix);
     }
 }

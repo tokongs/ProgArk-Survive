@@ -48,7 +48,6 @@ public class GameController implements InputProcessor {
 
     public void update(float delta, Camera camera) {
         movePlayer(camera);
-        model.debugRender(camera.combined);
         model.update(delta);
     }
 

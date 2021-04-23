@@ -25,6 +25,7 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
 
     private final Server server;
     private Listener listener;
+    private boolean active = false;
 
 
     @Inject
@@ -39,12 +40,14 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
         server.start();
         server.setDiscoveryHandler(new KryoHostDiscoveryHandler(sessionName));
         server.bind(TCP_PORT, UDP_PORT);
+        active = true;
     }
 
     @Override
     public void stopGameSession() {
         server.close();
         server.stop();
+        active = false;
     }
 
     @Override
@@ -70,5 +73,10 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
     @Override
     public List<Integer> getConnectionIds() {
         return Arrays.stream(server.getConnections()).map(Connection::getID).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 }

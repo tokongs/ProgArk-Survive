@@ -11,7 +11,7 @@ public class Main extends com.badlogic.gdx.Game {
 
     private final Prefs prefs;
     private boolean gameRunning = false;
-    private boolean isGameHost = false;
+    private boolean isGameHost = true;
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
@@ -61,7 +61,7 @@ public class Main extends com.badlogic.gdx.Game {
                 setScreen(loadingScreen.get());
                 break;
             case MAIN_MENU:
-                setScreen(gameOverScreen.get());
+                setScreen(mainMenuScreen.get());
                 break;
             case NETWORKING:
                 setScreen(networkingScreen.get());
