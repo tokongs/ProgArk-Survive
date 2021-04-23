@@ -9,12 +9,11 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.kryonet.Client;
 import com.mygdx.progarksurvive.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
@@ -42,7 +41,6 @@ public class GameModel {
     private int round = 0;
     private boolean initialized = false;
 
-    private final SpriteBatch batch;
     private ClientGameModel clientGameModel;
 
     @Inject
@@ -65,7 +63,6 @@ public class GameModel {
         this.assetManager = assetManager;
         this.game = game;
         this.host = host;
-        this.batch = batch;
 
         if (game.getIsGameHost()) {
             host.setEventHandler((id, event) -> {
@@ -92,7 +89,15 @@ public class GameModel {
             ashley.addSystem(projectileImpactSystem);
         } else {
             clientGameModel = new ClientGameModel(client, assetManager, game);
+            ashley.addSystem(renderSystem);
+            ashley.addSystem(positionSystem);
+            setupMap();
+
         }
+    }
+
+    public ClientGameModel getClientGameModel(){
+        return clientGameModel;
     }
 
     public void setupMap() {
@@ -120,7 +125,8 @@ public class GameModel {
         bodies.forEach(world::destroyBody);
         initialized = false;
         game.setState(GameState.GAME_OVER);
-        if(host.isActive()){
+        onlinePlayers.clear();
+        if (host.isActive()) {
             host.stopGameSession();
         }
     }
@@ -140,9 +146,9 @@ public class GameModel {
     }
 
     public void update(float delta) {
-
-
+        ashley.update(delta);
         if (game.getIsGameHost()) {
+
             if (!initialized) {
                 initialize();
             }
@@ -169,27 +175,23 @@ public class GameModel {
             }
 
             boolean deadPlayers = false;
-            for(Integer id: onlinePlayers.keySet()) {
+            for (Integer id : onlinePlayers.keySet()) {
                 Entity entity = onlinePlayers.get(id).entity;
                 int health = entity.getComponent(HealthComponent.class).health;
-                if(health <= 0){
+                if (health <= 0) {
                     deadPlayers = true;
                 }
                 playerHealth.put(id, health);
                 playerScore.put(id, entity.getComponent(ScoreComponent.class).score);
             }
-            if(deadPlayers || player.entity.getComponent(HealthComponent.class).health <= 0){
+            if (deadPlayers || player.entity.getComponent(HealthComponent.class).health <= 0) {
                 host.update(new GameOverEvent(round, playerScore, playerHealth));
                 gameOver();
             }
 
             host.update(new HostUpdateEvent(playerPositions, enemyPositions, projectilePositions, playerHealth, playerScore));
-            ashley.update(delta);
-            world.step(1 / 60f, 6, 2);
-
-        } else {
-            clientGameModel.render(delta, batch);
         }
+        world.step(1 / 60f, 6, 2);
     }
 
     public void initializeGameRound(int numEnemies) {
@@ -203,21 +205,21 @@ public class GameModel {
     }
 
     public int getPlayerScore() {
-        if(game.getIsGameHost()){
+        if (game.getIsGameHost()) {
             return player.entity.getComponent(ScoreComponent.class).score;
         }
         return clientGameModel.getScore();
     }
 
     public int getPlayerHealth() {
-        if(game.getIsGameHost()){
+        if (game.getIsGameHost()) {
             return player.entity.getComponent(HealthComponent.class).health;
         }
         return clientGameModel.getHealth();
     }
 
     public int getRound() {
-        if(game.getIsGameHost()){
+        if (game.getIsGameHost()) {
             return round;
         }
         return clientGameModel.getRound();

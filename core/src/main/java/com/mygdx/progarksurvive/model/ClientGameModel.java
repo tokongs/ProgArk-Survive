@@ -1,5 +1,6 @@
 package com.mygdx.progarksurvive.model;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -46,6 +47,7 @@ public class ClientGameModel {
         enemyTexture = assetManager.get("images/player.png", Texture.class);
         projectileTexture = assetManager.get("images/player.png", Texture.class);
 
+
         client.setEventHandler((id, event) -> {
             if(event instanceof HostUpdateEvent){
                 HostUpdateEvent e = (HostUpdateEvent) event;
@@ -62,27 +64,30 @@ public class ClientGameModel {
                 game.setState(GameState.GAME_OVER);
                 client.leaveGameSession();
             }
-
         });
-
     }
 
-    public void render(float delta, SpriteBatch batch){
-        batch.begin();
-        players.forEach(position -> {
-            batch.draw(playerTexture, position.x-25, position.y-25, 50, 50);
-        });
+    public List<Vector2> getPlayers() {
+        return players;
+    }
 
-        enemies.forEach(position -> {
-            batch.draw(enemyTexture, position.x-10, position.y-10, 20, 20);
-        });
+    public List<Vector2> getEnemies() {
+        return enemies;
+    }
 
-        projectiles.forEach(position -> {
-            batch.draw(projectileTexture, position.x -2.5f, position.y-2.5f, 5, 5);
-        });
+    public List<Vector2> getProjectiles() {
+        return projectiles;
+    }
 
+    public Texture getPlayerTexture() {
+        return playerTexture;
+    }
 
+    public Texture getEnemyTexture() {
+        return enemyTexture;
+    }
 
-        batch.end();
+    public Texture getProjectileTexture() {
+        return projectileTexture;
     }
 }

@@ -30,7 +30,6 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void update(float deltaTime){
-        batch.begin();
         if(this.entities != null){
             for(Entity entity: this.entities){
                 PositionComponent position = pm.get(entity);
@@ -38,7 +37,5 @@ public class RenderSystem extends EntitySystem {
                 batch.draw(image.texture, position.position.x, position.position.y, image.size.x, image.size.y);
             }
         }
-        batch.end();
-
     }
 }

@@ -98,6 +98,7 @@ public class NetworkingScreen implements Screen {
 
     private void onStartGameClick(){
         game.setState(GameState.GAME);
+
         if(host.isActive()){
             host.update(new GameStartEvent());
         }
@@ -138,12 +139,15 @@ public class NetworkingScreen implements Screen {
                 statusLabel.setText("Waiting for host to start the game...");
                 client.setEventHandler((Id, event) -> {
                     if(event instanceof GameStartEvent){
-                        game.setState(GameState.GAME);
+                        Gdx.app.postRunnable(() -> game.setState(GameState.GAME));
                     }
                 });
                 gameSessionNameField.setDisabled(true);
             } catch (Exception e) {
                 statusLabel.setText("Unable to join game session!");
+                isHost = true;
+                game.setIsGameHost(true);
+                startGameButton.setVisible(true);
                 e.printStackTrace();
             }
         }).start();
@@ -153,6 +157,8 @@ public class NetworkingScreen implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(stage);
         statusLabel.setText("");
+        startGameButton.setVisible(true);
+        gameSessionNameField.setDisabled(false);
     }
 
     @Override

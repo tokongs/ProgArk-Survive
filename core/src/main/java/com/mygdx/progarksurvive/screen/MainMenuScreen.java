@@ -25,10 +25,9 @@ public class MainMenuScreen implements Screen {
     private Texture settingsBtnTexture;
 
     @Inject
-    public MainMenuScreen(MainMenuModel mainMenuModel, MainMenuController mainMenuController, SpriteBatch batch){
+    public MainMenuScreen(MainMenuModel mainMenuModel, MainMenuController mainMenuController){
         model = mainMenuModel;
         controller = mainMenuController;
-        this.batch = batch;
     }
 
 
