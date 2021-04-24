@@ -9,14 +9,15 @@ import com.mygdx.progarksurvive.model.entitycomponents.*;
 public class Enemy {
     public Entity entity = new Entity();
 
-    public Enemy(Vector2 position, Vector2 size, Texture texture, World world){
+    public Enemy(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world){
         entity.add(new EnemyComponent());
         entity.add(new PositionComponent(position));
-        entity.add(new ImageComponent(texture, size));
+        entity.add(new ImageComponent(animationComponent.textures.get(animationComponent.defaultTexture), size));
         entity.add(new HealthComponent(20));
         entity.add(new CollisionComponent());
         entity.add(new TargetingComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
+        entity.add(animationComponent);
     }
 
     private Body createBody(Vector2 position, Vector2 size, World world){

@@ -52,6 +52,11 @@ public interface GameModule {
     static AssetManager provideAssetManager() {
         AssetManager assetManager = new AssetManager();
         assetManager.load("images/player.png", Texture.class);
+        for(int i=1; i <= 9; i++){
+            assetManager.load("images/PlayerTexture" + i + ".png", Texture.class);
+            assetManager.load("images/Zombie1Texture" + i + ".png", Texture.class);
+        }
+        assetManager.load("images/BulletTexture.png", Texture.class);
         assetManager.load("skin/uiskin.json", Skin.class);
         return assetManager;
     }
