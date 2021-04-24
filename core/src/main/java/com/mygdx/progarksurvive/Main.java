@@ -88,6 +88,8 @@ public class Main extends com.badlogic.gdx.Game {
 
     public Prefs getPrefs(){return prefs;}
 
+
+
     public boolean isGameRunning() {
         return gameRunning;
     }

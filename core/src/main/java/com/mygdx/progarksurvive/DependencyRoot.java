@@ -15,8 +15,8 @@ public class DependencyRoot extends ApplicationAdapter {
 
     @Override
     public void create() {
-        GameFactory gameFactory = DaggerGameFactory.create();
-        game = gameFactory.game();
+        GameComponent gameComponent = DaggerGameComponent.create();
+        game = gameComponent.gameContainerFactory().create(playServices).main;
         game.create();
 
     }

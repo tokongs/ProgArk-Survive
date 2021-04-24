@@ -31,17 +31,11 @@ import static com.badlogic.gdx.Input.Keys.R;
 public class SettingsController implements InputProcessor {
     private final SettingsModel model;
     private final Main game;
-    private PlayServices playServices;
-
-
-
-
-
+    
     @Inject
     public SettingsController(SettingsModel settingsModel, Main game){
         this.model = settingsModel;
         this.game = game;
-        this.playServices = playServices;
         model.setGameVolume(game.getPrefs().hasSound());
         model.setMusicVolume(game.getPrefs().hasMusic());
         model.setMenuIsParent(game.isGameRunning());
@@ -69,7 +63,6 @@ public class SettingsController implements InputProcessor {
             System.out.println("MUTE GAME");
             game.getPrefs().setSound(!game.getPrefs().hasSound());
             model.setGameVolume(!model.isGameVolume());
-
         }
         else if(model.getMusicRect().contains(screenX, y)){
             System.out.println("MUTE MUSIC");

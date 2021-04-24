@@ -8,6 +8,6 @@ import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = GameModule.class)
-public interface GameFactory {
-    com.badlogic.gdx.Game game();
+public interface GameComponent {
+    GameContainerFactory gameContainerFactory();
 }
