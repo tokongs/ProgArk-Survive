@@ -25,6 +25,7 @@ import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class GameModel {
@@ -57,7 +58,8 @@ public class GameModel {
                      World world,
                      Main game,
                      NetworkedGameHost host,
-                     NetworkedGameClient client) {
+                     NetworkedGameClient client,
+                     AnimationSystem animationSystem) {
         this.world = world;
         this.ashley = ashley;
         this.assetManager = assetManager;
@@ -83,6 +85,7 @@ public class GameModel {
             ashley.addSystem(enemyMovementSystem);
             ashley.addSystem(playerDamageSystem);
             ashley.addSystem(projectileImpactSystem);
+            ashley.addSystem(animationSystem);
         } else {
             clientGameModel = new ClientGameModel(client, assetManager, game);
             ashley.addSystem(renderSystem);
@@ -128,10 +131,15 @@ public class GameModel {
     }
 
     public void initialize() {
-        player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world);
+        List<String> textureFilenames = new ArrayList<>();
+        for(int i=1; i <= 9; i++){
+            textureFilenames.add("images/PlayerTexture" + i + ".png");
+        }
+        List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
+        player = new Player(new Vector2(300, 300), new Vector2(50, 50), new AnimationComponent(0.3f, textures, 4), world);
 
         if (game.getIsGameHost()) {
-            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager.get("images/player.png", Texture.class), world)));
+            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), new AnimationComponent(0.3f, textures, 4), world)));
             onlinePlayers.forEach((id, player) -> ashley.addEntity(player.entity));
         }
 
@@ -192,11 +200,16 @@ public class GameModel {
     }
 
     public void initializeGameRound(int numEnemies) {
-        Texture enemyTexture = assetManager.get("images/player.png", Texture.class);
+        List<String> textureFilenames = new ArrayList<>();
+        for(int i = 1; i <= 9; i++){
+            textureFilenames.add("images/Zombie1Texture" + i + ".png");
+        }
+        List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
+
         Random rand = new Random();
         for (int i = 0; i < numEnemies; i++) {
             Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
-            Enemy enemy = new Enemy(position, new Vector2(20, 20), enemyTexture, world);
+            Enemy enemy = new Enemy(position, new Vector2(20, 20), new AnimationComponent(0.3f, textures, 4), world);
             ashley.addEntity(enemy.entity);
         }
     }

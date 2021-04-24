@@ -29,7 +29,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
         super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
-        texture = assetManager.get("images/player.png", Texture.class);
+        texture = assetManager.get("images/BulletTexture.png", Texture.class);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
         entity.add(new CollisionComponent());
         entity.add(new PhysicsBodyComponent(body));
         entity.add(new ProjectileComponent(10, shooter));
-        entity.add(new ImageComponent(texture, new Vector2(5, 5)));
+        entity.add(new ImageComponent(texture, new Vector2(5, 3)));
 
         engine.addEntity(entity);
     }
