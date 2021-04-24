@@ -1,17 +1,20 @@
 package com.mygdx.progarksurvive.networking.kryo;
 
-import com.esotericsoftware.kryonet.ClientDiscoveryHandler;
-import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
-import com.esotericsoftware.kryonet.ServerDiscoveryHandler;
+import com.esotericsoftware.kryonet.*;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Implementation of {@link com.mygdx.progarksurvive.networking.NetworkedGameHost NetworkedGameHost} based
@@ -22,6 +25,7 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
 
     private final Server server;
     private Listener listener;
+    private boolean active = false;
 
 
     @Inject
@@ -36,16 +40,18 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
         server.start();
         server.setDiscoveryHandler(new KryoHostDiscoveryHandler(sessionName));
         server.bind(TCP_PORT, UDP_PORT);
+        active = true;
     }
 
     @Override
     public void stopGameSession() {
         server.close();
         server.stop();
+        active = false;
     }
 
     @Override
-    public void update(HostUpdateEvent event) {
+    public void update(HostNetworkEvent event) {
         server.sendToAllTCP(event);
     }
 
@@ -62,5 +68,15 @@ public class KryoNetworkedGameHost extends KryoBase implements NetworkedGameHost
     @Override
     public int numberOfConnections() {
         return server.getConnections().length;
+    }
+
+    @Override
+    public List<Integer> getConnectionIds() {
+        return Arrays.stream(server.getConnections()).map(Connection::getID).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
     }
 }

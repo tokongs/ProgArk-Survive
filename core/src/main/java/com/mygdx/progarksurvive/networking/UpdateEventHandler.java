@@ -5,5 +5,5 @@ package com.mygdx.progarksurvive.networking;
  * @param <T>
  */
 public interface UpdateEventHandler<T> {
-    void handleEvent(T event);
+    void handleEvent(int Id, T event);
 }

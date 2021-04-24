@@ -2,9 +2,13 @@ package com.mygdx.progarksurvive.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.progarksurvive.controller.MainMenuController;
 import com.mygdx.progarksurvive.model.MainMenuModel;
 
@@ -30,7 +34,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-
         playBtnTexture = new Texture("PLAY_W84_H28.png");
         settingsBtnTexture = new Texture("SETTINGS_W173_H28.png");
 
@@ -39,8 +42,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        Gdx.gl.glClearColor(0,0,0,1);
+        ScreenUtils.clear(Color.BLACK);
         batch.begin();
         batch.draw(playBtnTexture, model.getPlayBtnPosition().x, model.getPlayBtnPosition().y);
         batch.draw(settingsBtnTexture, model.getSettingBtnPosition().x, model.getSettingBtnPosition().y);
@@ -64,7 +66,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-        dispose();
+    dispose();
     }
 
     public SpriteBatch getBatch() {

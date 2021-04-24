@@ -1,21 +1,24 @@
 package com.mygdx.progarksurvive.networking.events;
 
 
-import com.badlogic.gdx.math.Vector2;
-
 public class ClientUpdateEvent {
-    public Vector2 playerPosition;
-    public ClientUpdateEvent(){
-        playerPosition = new Vector2(0, 0);
+    public float touchX, touchY;
+    public boolean touchDown = false;
+
+    public ClientUpdateEvent() {
+
     }
-    public ClientUpdateEvent(Vector2 playerPosition) {
-        this.playerPosition = playerPosition;
+
+    public ClientUpdateEvent(float touchX, float touchY, boolean touchDown) {
+        this.touchX = touchX;
+        this.touchY = touchY;
+        this.touchDown = touchDown;
     }
 
     @Override
-    public boolean equals(Object o){
-        if(o == this) return true;
-        if(!(o instanceof ClientUpdateEvent)) return false;
-        return playerPosition == ((ClientUpdateEvent) o).playerPosition;
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof ClientUpdateEvent)) return false;
+        return touchY == ((ClientUpdateEvent) o).touchY && touchX == ((ClientUpdateEvent) o).touchX;
     }
 }
