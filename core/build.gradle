@@ -32,6 +32,7 @@ jacocoTestReport {
                         '**/*Module_*Factory.*',
                         '**/*_Factory.class',
                         '**/*Module_*Factory$InstanceHolder.class',
+                        '**/*_Factory$InstanceHolder.class',
                         '**/*Module.class',
                 ])
             }))

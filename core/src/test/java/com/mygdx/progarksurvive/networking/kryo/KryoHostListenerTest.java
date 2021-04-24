@@ -27,14 +27,15 @@ class KryoHostListenerTest {
                       @Mock HostUpdateEvent notClientUpdateEvent,
                       @Mock Connection connection) {
         KryoHostListener listener = new KryoHostListener(handler);
+        when(connection.getID()).thenReturn(1);
         listener.received(connection, event);
 
-        verify(handler, times(1)).handleEvent(event);
+        verify(handler, times(1)).handleEvent(1, event);
 
         reset(handler);
 
         listener.received(connection, notClientUpdateEvent);
-        verify(handler, times(0)).handleEvent(any());
+        verify(handler, times(0)).handleEvent(anyInt(), any());
     }
 
     @Test
