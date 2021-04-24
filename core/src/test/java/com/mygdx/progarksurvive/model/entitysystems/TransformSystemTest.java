@@ -22,7 +22,7 @@ class TransformSystemTest {
     void testProcessEntity(@Mock Entity entity, @Mock Body body, @Mock Texture texture) {
         TransformSystem system = new TransformSystem();
         PhysicsBodyComponent pbc = new PhysicsBodyComponent(body);
-        TransformComponent pc = new TransformComponent(new Vector2(10, 10));
+        TransformComponent pc = new TransformComponent(new Vector2(10, 10),0);
         ImageComponent ic  = new ImageComponent(texture, new Vector2(10, 10));
 
         when(entity.getComponent(TransformComponent.class)).thenReturn(pc);
