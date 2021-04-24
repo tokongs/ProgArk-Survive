@@ -68,12 +68,7 @@ public class GameModel {
         if (game.getIsGameHost()) {
             host.setEventHandler((id, event) -> {
                 PhysicsBodyComponent physicsBodyComponent = onlinePlayers.get(id).entity.getComponent(PhysicsBodyComponent.class);
-                if (event.touchDown) {
-                    Vector2 direction = new Vector2(event.touchX - physicsBodyComponent.body.getPosition().x, event.touchY - physicsBodyComponent.body.getPosition().y).limit(1);
-                    physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
-                } else {
-                    physicsBodyComponent.body.setLinearVelocity(new Vector2(0, 0));
-                }
+                physicsBodyComponent.body.setLinearVelocity(event.direction.scl(100));
             });
             initialize();
 

@@ -14,11 +14,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public class GameController implements InputProcessor {
+public class GameController{
 
     private final GameModel model;
-    private float touchX, touchY;
-    private boolean touchDown = false;
     private final Main game;
     private final NetworkedGameClient client;
 
@@ -29,72 +27,17 @@ public class GameController implements InputProcessor {
         this.client = client;
     }
 
-    private void movePlayer(Camera camera) {
-        Vector3 touch = camera.unproject(new Vector3(touchX, touchY, 0));
+    public void movePlayer(Vector2 direction) {
 
         if (game.getIsGameHost()) {
             PhysicsBodyComponent physicsBodyComponent = model.player.entity.getComponent(PhysicsBodyComponent.class);
-
-            if (touchDown) {
-                Vector2 direction = new Vector2(touch.x - physicsBodyComponent.body.getPosition().x, touch.y - physicsBodyComponent.body.getPosition().y).limit(1);
-                physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
-            } else {
-                physicsBodyComponent.body.setLinearVelocity(new Vector2(0, 0));
-            }
+            physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
         } else {
-            client.update(new ClientUpdateEvent(touch.x, touch.y, touchDown));
+            client.update(new ClientUpdateEvent(direction));
         }
     }
 
-    public void update(float delta, Camera camera) {
-        movePlayer(camera);
+    public void update(float delta) {
         model.update(delta);
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touchDown = true;
-        touchX = screenX;
-        touchY = screenY;
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        touchDown = false;
-
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        touchX = screenX;
-        touchY = screenY;
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(float amountX, float amountY) {
-        return false;
     }
 }
