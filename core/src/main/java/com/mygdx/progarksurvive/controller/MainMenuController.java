@@ -46,6 +46,10 @@ public class MainMenuController implements InputProcessor {
             System.out.println("settingscreen");
             game.setState(GameState.SETTINGS);
         }
+        else if(model.getHighscoreRect().contains(screenX, y)){
+            game.playServices.signIn();
+            game.playServices.showLeaderboard("CgkIpbOPqecIEAIQAQ");
+        }
         return false;
     }
 

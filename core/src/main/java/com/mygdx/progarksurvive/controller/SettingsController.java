@@ -31,7 +31,7 @@ import static com.badlogic.gdx.Input.Keys.R;
 public class SettingsController implements InputProcessor {
     private final SettingsModel model;
     private final Main game;
-    
+
     @Inject
     public SettingsController(SettingsModel settingsModel, Main game){
         this.model = settingsModel;
