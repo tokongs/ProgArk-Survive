@@ -2,6 +2,8 @@ package com.mygdx.progarksurvive;
 
 import com.mygdx.progarksurvive.screen.*;
 import dagger.Lazy;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,6 +14,7 @@ public class Main extends com.badlogic.gdx.Game {
     private final Prefs prefs;
     private boolean gameRunning = false;
     private boolean isGameHost = true;
+    public Test test;
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
