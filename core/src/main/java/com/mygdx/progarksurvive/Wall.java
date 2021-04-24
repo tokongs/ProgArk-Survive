@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.progarksurvive.model.entitycomponents.CollisionComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.TransformComponent;
 
 public class Wall {
     public Entity entity;
@@ -33,6 +33,6 @@ public class Wall {
         entity.add(new CollisionComponent());
         entity.add(new ImageComponent(color, size));
         entity.add(new PhysicsBodyComponent(body));
-        entity.add(new PositionComponent(position));
+        entity.add(new TransformComponent(position, 0));
     }
 }

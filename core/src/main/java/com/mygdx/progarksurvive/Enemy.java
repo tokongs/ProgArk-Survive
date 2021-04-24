@@ -1,7 +1,6 @@
 package com.mygdx.progarksurvive;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
@@ -11,7 +10,7 @@ public class Enemy {
 
     public Enemy(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world){
         entity.add(new EnemyComponent());
-        entity.add(new PositionComponent(position));
+        entity.add(new TransformComponent(position, 0));
         entity.add(new ImageComponent(animationComponent.textures.get(animationComponent.defaultTexture), size));
         entity.add(new HealthComponent(20));
         entity.add(new CollisionComponent());

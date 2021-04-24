@@ -8,7 +8,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.PositionComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.TransformComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,7 +17,7 @@ import javax.inject.Singleton;
 public class RenderSystem extends EntitySystem {
     private final SpriteBatch batch;
     private ImmutableArray<Entity> entities;
-    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private ComponentMapper<TransformComponent> pm = ComponentMapper.getFor(TransformComponent.class);
     private ComponentMapper<ImageComponent> im = ComponentMapper.getFor(ImageComponent.class);
 
     @Inject
@@ -26,15 +26,17 @@ public class RenderSystem extends EntitySystem {
     }
 
     public void addedToEngine(Engine engine){
-        entities = engine.getEntitiesFor(Family.all(PositionComponent.class, ImageComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(TransformComponent.class, ImageComponent.class).get());
     }
 
     public void update(float deltaTime){
         if(this.entities != null){
             for(Entity entity: this.entities){
-                PositionComponent position = pm.get(entity);
+                TransformComponent transform = pm.get(entity);
                 ImageComponent image = im.get(entity);
-                batch.draw(image.texture, position.position.x, position.position.y, image.size.x, image.size.y);
+                image.sprite.setPosition(transform.position.x, transform.position.y);
+                image.sprite.setRotation(transform.rotation);
+                image.sprite.draw(batch);
             }
         }
     }

@@ -3,17 +3,15 @@ package com.mygdx.progarksurvive.model.entitycomponents;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 
-public class PositionComponent implements Component {
+public class TransformComponent implements Component {
 
 
     public Vector2 position;
+    public float rotation;
 
-    public PositionComponent(float x, float y){
-        position = new Vector2(x, y);
-    }
-
-    public PositionComponent(Vector2 position){
+    public TransformComponent(Vector2 position, float rotation){
         this.position = position;
+        this.rotation = rotation;
     }
 
     public Vector2 getPosition() {
