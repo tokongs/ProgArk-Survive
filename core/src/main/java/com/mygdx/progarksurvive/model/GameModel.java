@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.progarksurvive.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
+import com.mygdx.progarksurvive.networking.NetworkedEntityInfo;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
@@ -40,8 +41,7 @@ public class GameModel {
     private int round = 0;
     private boolean initialized = false;
 
-    private ClientGameModel clientGameModel;
-    private final NetworkedGameClient networkedGameClient;
+    private ClientNetworkHandler clientNetworkHandler;
 
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
@@ -56,14 +56,14 @@ public class GameModel {
                      World world,
                      Main game,
                      NetworkedGameHost host,
-                     NetworkedGameClient client,
-                     AnimationSystem animationSystem) {
+                     AnimationSystem animationSystem,
+                     ClientNetworkHandler clientNetworkHandler) {
         this.world = world;
         this.ashley = ashley;
         this.assetManager = assetManager;
         this.game = game;
         this.host = host;
-        this.networkedGameClient = client;
+        this.clientNetworkHandler = clientNetworkHandler;
 
         if (game.getIsGameHost()) {
             host.setEventHandler((id, event) -> {
@@ -85,16 +85,12 @@ public class GameModel {
             ashley.addSystem(projectileImpactSystem);
             ashley.addSystem(animationSystem);
         } else {
-            clientGameModel = new ClientGameModel(client, assetManager, game);
             ashley.addSystem(renderSystem);
+            ashley.addSystem(animationSystem);
             ashley.addSystem(transformSystem);
             setupMap();
 
         }
-    }
-
-    public ClientGameModel getClientGameModel(){
-        return clientGameModel;
     }
 
     public void setupMap() {
@@ -129,26 +125,48 @@ public class GameModel {
     }
 
     public void initialize() {
-        List<String> textureFilenames = new ArrayList<>();
-        for(int i=1; i <= 9; i++){
-            textureFilenames.add("images/PlayerTexture" + i + ".png");
-        }
-        List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
-        player = new Player(new Vector2(300, 300), new Vector2(50, 50), new AnimationComponent(0.3f, textures, 4), world);
+
+        player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world);
 
         if (game.getIsGameHost()) {
-            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), new AnimationComponent(0.3f, textures, 4), world)));
+            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world)));
             onlinePlayers.forEach((id, player) -> ashley.addEntity(player.entity));
         }
 
         ashley.addEntity(player.entity);
         setupMap();
         round = 0;
-        clientGameModel = new ClientGameModel(networkedGameClient,  assetManager, game);
         initialized = true;
     }
 
+    public void broadCastUpdateEvent(){
+        List<NetworkedEntityInfo> networkedEntities = new ArrayList<>();
+
+        for (Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class).get())) {
+            networkedEntities.add(new NetworkedEntityInfo(new ArrayList<>(Arrays.asList(
+                    e.getComponent(NetworkIdComponent.class),
+                    e.getComponent(TransformComponent.class),
+                    e.getComponent(TypeComponent.class),
+                    e.getComponent(ScoreComponent.class),
+                    e.getComponent(HealthComponent.class)
+            ))));
+        }
+
+        for (Entity e : ashley.getEntitiesFor(Family.one(EnemyComponent.class, ProjectileComponent.class).all(PhysicsBodyComponent.class).get())) {
+            networkedEntities.add(new NetworkedEntityInfo(new ArrayList<>(Arrays.asList(
+                    e.getComponent(NetworkIdComponent.class),
+                    e.getComponent(TypeComponent.class),
+                    e.getComponent(TransformComponent.class)
+            ))));
+        }
+
+        host.update(new HostUpdateEvent(networkedEntities));
+    }
+
     public void update(float delta) {
+        if(!game.getIsGameHost()){
+            clientNetworkHandler.update();
+        }
         ashley.update(delta);
         if (game.getIsGameHost()) {
 
@@ -161,22 +179,9 @@ public class GameModel {
                 initializeGameRound(9 + round);
             }
 
-            List<Vector2> playerPositions = new ArrayList<>();
-            List<Vector2> enemyPositions = new ArrayList<>();
-            List<Vector2> projectilePositions = new ArrayList<>();
+            broadCastUpdateEvent();
             Map<Integer, Integer> playerHealth = new HashMap<>();
             Map<Integer, Integer> playerScore = new HashMap<>();
-
-            for (Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())) {
-                playerPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
-            }
-            for (Entity e : ashley.getEntitiesFor(Family.all(EnemyComponent.class, PhysicsBodyComponent.class).get())) {
-                enemyPositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
-            }
-            for (Entity e : ashley.getEntitiesFor(Family.all(ProjectileComponent.class, PhysicsBodyComponent.class).get())) {
-                projectilePositions.add(e.getComponent(PhysicsBodyComponent.class).body.getPosition());
-            }
-
             boolean deadPlayers = false;
             for (Integer id : onlinePlayers.keySet()) {
                 Entity entity = onlinePlayers.get(id).entity;
@@ -191,23 +196,16 @@ public class GameModel {
                 host.update(new GameOverEvent(round, playerScore, playerHealth));
                 gameOver();
             }
-
-            host.update(new HostUpdateEvent(playerPositions, enemyPositions, projectilePositions, playerHealth, playerScore));
         }
         world.step(1 / 60f, 6, 2);
     }
 
     public void initializeGameRound(int numEnemies) {
-        List<String> textureFilenames = new ArrayList<>();
-        for(int i = 1; i <= 9; i++){
-            textureFilenames.add("images/Zombie1Texture" + i + ".png");
-        }
-        List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
-
         Random rand = new Random();
         for (int i = 0; i < numEnemies; i++) {
+            AnimationComponent animationComponent = Enemy.createAnimationComponent(assetManager);
             Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
-            Enemy enemy = new Enemy(position, new Vector2(20, 20), new AnimationComponent(0.3f, textures, 4), world);
+            Enemy enemy = new Enemy(position, new Vector2(20, 20), animationComponent, world);
             ashley.addEntity(enemy.entity);
         }
     }
@@ -216,20 +214,20 @@ public class GameModel {
         if (game.getIsGameHost()) {
             return player.entity.getComponent(ScoreComponent.class).score;
         }
-        return clientGameModel.getScore();
+        return clientNetworkHandler.getScore();
     }
 
     public int getPlayerHealth() {
         if (game.getIsGameHost()) {
             return player.entity.getComponent(HealthComponent.class).health;
         }
-        return clientGameModel.getHealth();
+        return clientNetworkHandler.getHealth();
     }
 
     public int getRound() {
         if (game.getIsGameHost()) {
             return round;
         }
-        return clientGameModel.getRound();
+        return clientNetworkHandler.getRound();
     }
 }

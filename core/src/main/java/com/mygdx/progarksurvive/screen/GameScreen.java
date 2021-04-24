@@ -19,7 +19,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.controller.GameController;
-import com.mygdx.progarksurvive.model.ClientGameModel;
 import com.mygdx.progarksurvive.model.GameModel;
 
 import javax.inject.Inject;
@@ -82,9 +81,6 @@ public class GameScreen implements Screen {
         batch.begin();
 
         controller.update(delta);
-        if (!game.getIsGameHost()) {
-            renderGameClientModel();
-        }
 
         font.setColor(Color.WHITE);
         font.draw(batch, String.valueOf(model.getPlayerScore()), 12, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 12);
@@ -94,21 +90,6 @@ public class GameScreen implements Screen {
         stage.act();
         stage.draw();
 
-    }
-
-    void renderGameClientModel() {
-        ClientGameModel clientGameModel = model.getClientGameModel();
-        clientGameModel.getPlayers().forEach(position -> {
-            batch.draw(clientGameModel.getPlayerTexture(), position.x - 25, position.y - 25, 50, 50);
-        });
-
-        clientGameModel.getEnemies().forEach(position -> {
-            batch.draw(clientGameModel.getEnemyTexture(), position.x - 10, position.y - 10, 20, 20);
-        });
-
-        clientGameModel.getProjectiles().forEach(position -> {
-            batch.draw(clientGameModel.getProjectileTexture(), position.x - 2.5f, position.y - 2.5f, 5, 5);
-        });
     }
 
     @Override

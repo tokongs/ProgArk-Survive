@@ -15,7 +15,7 @@ public class AnimationSystem extends IteratingSystem {
 
     @Inject
     public AnimationSystem(){
-        super(Family.all(ImageComponent.class, PhysicsBodyComponent.class, AnimationComponent.class).get());
+        super(Family.all(ImageComponent.class, AnimationComponent.class).get());
     }
 
     @Override
@@ -23,21 +23,17 @@ public class AnimationSystem extends IteratingSystem {
         PhysicsBodyComponent physicsBodyComponent = entity.getComponent(PhysicsBodyComponent.class);
         ImageComponent imageComponent = entity.getComponent(ImageComponent.class);
         AnimationComponent animationcomponent = entity.getComponent(AnimationComponent.class);
-        if(physicsBodyComponent.body.getLinearVelocity().isZero()){
-            imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.defaultTexture));
+        if(physicsBodyComponent == null || !physicsBodyComponent.body.getLinearVelocity().isZero()){
+            animationcomponent.timePast += deltaTime;
+            if(animationcomponent.timePast < animationcomponent.timePerTexture){
+                return;
+            }
+
+            animationcomponent.timePast = 0;
+            animationcomponent.textureIndex = (animationcomponent.textureIndex + 1)%animationcomponent.textures.size();
+            imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.textureIndex));
             return;
         }
-
-
-
-        animationcomponent.timePast += deltaTime;
-        if(animationcomponent.timePast < animationcomponent.timePerTexture){
-            return;
-        }
-
-        animationcomponent.timePast = 0;
-        animationcomponent.textureIndex = (animationcomponent.textureIndex + 1)%animationcomponent.textures.size();
-        imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.textureIndex));
-
+        imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.defaultTexture));
     }
 }

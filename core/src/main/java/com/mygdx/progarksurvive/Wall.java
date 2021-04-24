@@ -7,10 +7,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygdx.progarksurvive.model.entitycomponents.CollisionComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.TransformComponent;
+import com.mygdx.progarksurvive.model.EntityType;
+import com.mygdx.progarksurvive.model.entitycomponents.*;
 
 public class Wall {
     public Entity entity;
@@ -31,6 +29,7 @@ public class Wall {
         shape.dispose();
 
         entity.add(new CollisionComponent());
+        entity.add(new TypeComponent(EntityType.WALL));
         entity.add(new ImageComponent(color, size));
         entity.add(new PhysicsBodyComponent(body));
         entity.add(new TransformComponent(position, 0));

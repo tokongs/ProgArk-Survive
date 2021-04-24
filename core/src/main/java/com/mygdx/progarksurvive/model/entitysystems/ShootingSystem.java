@@ -6,6 +6,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygdx.progarksurvive.Projectile;
+import com.mygdx.progarksurvive.model.EntityType;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 
 import javax.inject.Inject;
@@ -16,7 +18,6 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
     private final World world;
     private final Engine engine;
-    private final Texture texture;
 
     private final float bulletVelocity = 1000f;
 
@@ -25,7 +26,6 @@ public class ShootingSystem extends IntervalIteratingSystem {
         super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
-        texture = assetManager.get("images/BulletTexture.png", Texture.class);
     }
 
     @Override
@@ -44,45 +44,8 @@ public class ShootingSystem extends IntervalIteratingSystem {
         // If target is dead, remove target pointer
         if(targeting.target.getComponent(HealthComponent.class).health < 0){targeting.target = null; return;}
 
-        createProjectile(position, direction, entity);
+        Projectile projectile = new Projectile(position, direction, world, entity);
+        engine.addEntity(projectile.entity);
 
     }
-
-    private void createProjectile(Vector2 position, Vector2 direction, Entity shooter){
-        Entity entity = new Entity();
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = false;
-
-        bodyDef.position.set(position.mulAdd(direction, 5));
-
-
-        Body body = world.createBody(bodyDef);
-
-        PolygonShape shape = new PolygonShape();
-
-        shape.setAsBox(5f / 2, 5f / 2);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.0f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.0f;
-
-        body.setUserData(entity);
-        body.createFixture(fixtureDef);
-        body.setLinearVelocity(direction.scl(bulletVelocity));
-        body.setTransform(body.getPosition(), direction.angleDeg(new Vector2(1, 0)));
-        shape.dispose();
-
-        entity.add(new TransformComponent(position,0));
-        entity.add(new CollisionComponent());
-        entity.add(new PhysicsBodyComponent(body));
-        entity.add(new ProjectileComponent(10, shooter));
-        entity.add(new ImageComponent(texture, new Vector2(5, 3)));
-
-        engine.addEntity(entity);
-    }
-    
 }
