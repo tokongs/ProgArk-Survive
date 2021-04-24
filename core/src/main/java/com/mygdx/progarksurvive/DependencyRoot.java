@@ -7,11 +7,18 @@ public class DependencyRoot extends ApplicationAdapter {
 
     private Game game;
 
+    private PlayServices playServices;
+
+    public DependencyRoot(PlayServices playServices){
+        this.playServices = playServices;
+    }
+
     @Override
     public void create() {
         GameFactory gameFactory = DaggerGameFactory.create();
         game = gameFactory.game();
         game.create();
+
     }
 
     @Override
@@ -23,4 +30,6 @@ public class DependencyRoot extends ApplicationAdapter {
     public void dispose() {
         game.dispose();
     }
+
+    
 }

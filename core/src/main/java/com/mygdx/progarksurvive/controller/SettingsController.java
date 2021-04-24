@@ -2,22 +2,46 @@ package com.mygdx.progarksurvive.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+
+
+import com.mygdx.progarksurvive.DependencyRoot;
 import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
+import com.mygdx.progarksurvive.PlayServices;
 import com.mygdx.progarksurvive.model.SettingsModel;
+
+
+
+
+
+
+
+
+
+
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+
+
+import static com.badlogic.gdx.Input.Keys.R;
 
 @Singleton
 public class SettingsController implements InputProcessor {
     private final SettingsModel model;
     private final Main game;
+    private PlayServices playServices;
+
+
+
+
 
     @Inject
     public SettingsController(SettingsModel settingsModel, Main game){
         this.model = settingsModel;
         this.game = game;
+        this.playServices = playServices;
         model.setGameVolume(game.getPrefs().hasSound());
         model.setMusicVolume(game.getPrefs().hasMusic());
         model.setMenuIsParent(game.isGameRunning());
@@ -45,6 +69,7 @@ public class SettingsController implements InputProcessor {
             System.out.println("MUTE GAME");
             game.getPrefs().setSound(!game.getPrefs().hasSound());
             model.setGameVolume(!model.isGameVolume());
+
         }
         else if(model.getMusicRect().contains(screenX, y)){
             System.out.println("MUTE MUSIC");
@@ -55,12 +80,17 @@ public class SettingsController implements InputProcessor {
             game.setState(GameState.MAIN_MENU);
         }
         else if(model.getBackToRect().contains(screenX, y)){
-            System.out.println("TO THE GAME");
-            game.setState(GameState.GAME);
+            if(game.isGameRunning()){
+                System.out.println("TO THE GAME");
+                game.setState(GameState.GAME);
+            }
+
         }
 
         return false;
     }
+
+
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
@@ -81,4 +111,8 @@ public class SettingsController implements InputProcessor {
     public boolean scrolled(float amountX, float amountY) {
         return false;
     }
+
+
+
+
 }

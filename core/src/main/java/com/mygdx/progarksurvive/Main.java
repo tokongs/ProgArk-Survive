@@ -11,8 +11,10 @@ import com.mygdx.progarksurvive.networking.*;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.screen.*;
 import com.mygdx.progarksurvive.Prefs;
-
 import dagger.Lazy;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
+
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,9 +24,11 @@ import java.util.Map;
 
 @Singleton
 public class Main extends com.badlogic.gdx.Game {
-
     private final Prefs prefs;
     private boolean gameRunning = false;
+    public PlayServices playServices;
+
+
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
