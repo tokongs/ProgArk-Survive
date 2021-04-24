@@ -2,15 +2,11 @@ package com.mygdx.progarksurvive.model.entitysystems;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
-import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.progarksurvive.Player;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
-import org.w3c.dom.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,9 +53,10 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = true;
+        bodyDef.fixedRotation = false;
 
         bodyDef.position.set(position.mulAdd(direction, 5));
+
 
         Body body = world.createBody(bodyDef);
 
@@ -76,9 +73,10 @@ public class ShootingSystem extends IntervalIteratingSystem {
         body.setUserData(entity);
         body.createFixture(fixtureDef);
         body.setLinearVelocity(direction.scl(bulletVelocity));
+        body.setTransform(body.getPosition(), direction.angleDeg(new Vector2(1, 0)));
         shape.dispose();
 
-        entity.add(new PositionComponent(position));
+        entity.add(new TransformComponent(position,0));
         entity.add(new CollisionComponent());
         entity.add(new PhysicsBodyComponent(body));
         entity.add(new ProjectileComponent(10, shooter));

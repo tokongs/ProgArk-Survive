@@ -24,7 +24,7 @@ public class AnimationSystem extends IteratingSystem {
         ImageComponent imageComponent = entity.getComponent(ImageComponent.class);
         AnimationComponent animationcomponent = entity.getComponent(AnimationComponent.class);
         if(physicsBodyComponent.body.getLinearVelocity().isZero()){
-            imageComponent.texture = animationcomponent.textures.get(animationcomponent.defaultTexture);
+            imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.defaultTexture));
             return;
         }
 
@@ -37,7 +37,7 @@ public class AnimationSystem extends IteratingSystem {
 
         animationcomponent.timePast = 0;
         animationcomponent.textureIndex = (animationcomponent.textureIndex + 1)%animationcomponent.textures.size();
-        imageComponent.texture = animationcomponent.textures.get(animationcomponent.textureIndex);
+        imageComponent.setTexture(animationcomponent.textures.get(animationcomponent.textureIndex));
 
     }
 }

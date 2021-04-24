@@ -6,13 +6,10 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.RayCastCallback;
-import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 
 @Singleton
 public class PlayerTargetingSystem extends IteratingSystem {
@@ -21,7 +18,7 @@ public class PlayerTargetingSystem extends IteratingSystem {
 
     @Inject
     public PlayerTargetingSystem(Engine ashley) {
-        super(Family.all(PlayerComponent.class, PositionComponent.class, TargetingComponent.class).get());
+        super(Family.all(PlayerComponent.class, TransformComponent.class, TargetingComponent.class).get());
         this.ashley = ashley;
     }
 
@@ -39,5 +36,11 @@ public class PlayerTargetingSystem extends IteratingSystem {
                 minDistance = distance;
             }
         }
+        Entity nearestEnemy = entity.getComponent(TargetingComponent.class).target;
+        if(!body.body.getLinearVelocity().isZero() || nearestEnemy == null){
+            return;
+        }
+        Vector2 direction = nearestEnemy.getComponent(PhysicsBodyComponent.class).body.getPosition().sub(body.body.getPosition());
+        body.body.setTransform(body.body.getPosition(), direction.angleDeg(new Vector2(1,0)));
     }
 }

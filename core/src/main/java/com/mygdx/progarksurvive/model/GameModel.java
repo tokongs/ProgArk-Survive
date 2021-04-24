@@ -8,12 +8,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryonet.Client;
 import com.mygdx.progarksurvive.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
@@ -49,7 +47,7 @@ public class GameModel {
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
                      RenderSystem renderSystem,
                      HealthSystem healthSystem,
-                     PositionSystem positionSystem,
+                     TransformSystem transformSystem,
                      PlayerTargetingSystem playerTargetingSystem,
                      EnemyTargetingSystem enemyTargetingSystem,
                      EnemyMovementSystem enemyMovementSystem,
@@ -78,7 +76,7 @@ public class GameModel {
 
             ashley.addSystem(renderSystem);
             ashley.addSystem(healthSystem);
-            ashley.addSystem(positionSystem);
+            ashley.addSystem(transformSystem);
             ashley.addSystem(shootingSystem);
             ashley.addSystem(playerTargetingSystem);
             ashley.addSystem(enemyTargetingSystem);
@@ -89,7 +87,7 @@ public class GameModel {
         } else {
             clientGameModel = new ClientGameModel(client, assetManager, game);
             ashley.addSystem(renderSystem);
-            ashley.addSystem(positionSystem);
+            ashley.addSystem(transformSystem);
             setupMap();
 
         }

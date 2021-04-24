@@ -1,12 +1,9 @@
 package com.mygdx.progarksurvive;
 
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
-
-import java.util.List;
 
 public class Player {
 
@@ -14,7 +11,7 @@ public class Player {
 
     public Player(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world){
         entity.add(new PlayerComponent());
-        entity.add(new PositionComponent(position));
+        entity.add(new TransformComponent(position, 0));
         entity.add(new ImageComponent(animationComponent.textures.get(animationComponent.defaultTexture), size));
         entity.add(new HealthComponent(10000));
         entity.add(new CollisionComponent());
@@ -27,7 +24,7 @@ public class Player {
     private Body createBody(Vector2 position, Vector2 size, World world){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = true;
+        bodyDef.fixedRotation = false;
 
         bodyDef.position.set(position);
 
