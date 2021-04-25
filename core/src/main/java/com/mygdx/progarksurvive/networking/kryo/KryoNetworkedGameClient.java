@@ -4,6 +4,7 @@ import com.esotericsoftware.kryonet.Client;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.UpdateEventHandler;
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameClient {
 
     private KryoClientListener listener = null;
+    private boolean active = false;
     KryoClientDiscoveryHandler discoveryHandler;
 
     Client client;
@@ -36,11 +38,13 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     @Override
     public void joinGameSession(String address) throws IOException {
         client.connect(5000, address, TCP_PORT, UDP_PORT);
+        active = true;
     }
 
     @Override
     public void leaveGameSession() {
         client.close();
+        active = false;
     }
 
     @Override
@@ -49,13 +53,23 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     }
 
     @Override
-    public void setEventHandler(UpdateEventHandler<HostUpdateEvent> eventHandler) {
+    public void setEventHandler(UpdateEventHandler<HostNetworkEvent> eventHandler) {
         if (listener != null) {
             client.removeListener(listener);
             listener = null;
         }
         listener = new KryoClientListener(eventHandler);
         client.addListener(listener);
+    }
+
+    @Override
+    public boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public int getConnectionId() {
+        return client.getID();
     }
 
     @Override

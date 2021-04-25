@@ -1,10 +1,12 @@
 package com.mygdx.progarksurvive.networking;
 
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Used for creating a game session and interacting with connected clients.
@@ -28,7 +30,7 @@ public interface NetworkedGameHost {
      * Send an update event to the connected clients
      * @param event Event to send
      */
-    void update(HostUpdateEvent event);
+    void update(HostNetworkEvent event);
 
     /**
      * Set a handler which receives all events from clients.
@@ -37,4 +39,8 @@ public interface NetworkedGameHost {
     void setEventHandler(UpdateEventHandler<ClientUpdateEvent> eventHandler);
 
     int numberOfConnections();
+
+    List<Integer> getConnectionIds();
+
+    boolean isActive();
 }

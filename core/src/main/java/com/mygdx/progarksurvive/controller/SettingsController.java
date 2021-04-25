@@ -3,11 +3,8 @@ package com.mygdx.progarksurvive.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 
-
-import com.mygdx.progarksurvive.DependencyRoot;
 import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
-import com.mygdx.progarksurvive.PlayServices;
 import com.mygdx.progarksurvive.model.SettingsModel;
 
 
@@ -23,9 +20,6 @@ import com.mygdx.progarksurvive.model.SettingsModel;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-
-
-import static com.badlogic.gdx.Input.Keys.R;
 
 @Singleton
 public class SettingsController implements InputProcessor {
@@ -60,12 +54,10 @@ public class SettingsController implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         int y = Gdx.graphics.getHeight() - screenY;
         if(model.getGameRect().contains(screenX, y)){
-            System.out.println("MUTE GAME");
             game.getPrefs().setSound(!game.getPrefs().hasSound());
             model.setGameVolume(!model.isGameVolume());
         }
         else if(model.getMusicRect().contains(screenX, y)){
-            System.out.println("MUTE MUSIC");
             game.getPrefs().setMusic(!game.getPrefs().hasMusic());
             model.setMusicVolume(!model.isMusicVolume());
         }
@@ -74,7 +66,6 @@ public class SettingsController implements InputProcessor {
         }
         else if(model.getBackToRect().contains(screenX, y)){
             if(game.isGameRunning()){
-                System.out.println("TO THE GAME");
                 game.setState(GameState.GAME);
             }
 

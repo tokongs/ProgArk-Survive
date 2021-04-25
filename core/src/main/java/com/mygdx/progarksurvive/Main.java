@@ -1,34 +1,18 @@
 package com.mygdx.progarksurvive;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
-import com.mygdx.progarksurvive.networking.*;
-import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.screen.*;
-import com.mygdx.progarksurvive.Prefs;
-import dagger.Lazy;
-import dagger.assisted.Assisted;
-import dagger.assisted.AssistedInject;
 
+import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Map;
 
 @Singleton
 public class Main extends com.badlogic.gdx.Game {
     private final Prefs prefs;
     private boolean gameRunning = false;
     public PlayServices playServices;
-
-
+    private boolean isGameHost = true;
 
     @Inject
     Lazy<LoadingScreen> loadingScreen;
@@ -46,7 +30,10 @@ public class Main extends com.badlogic.gdx.Game {
     Lazy<NetworkingScreen> networkingScreen;
 
     @Inject
-    public Main(){
+    Lazy<GameOverScreen> gameOverScreen;
+
+    @Inject
+    public Main() {
         super();
         this.prefs = new Prefs();
     }
@@ -66,7 +53,7 @@ public class Main extends com.badlogic.gdx.Game {
 
     }
 
-    public void setState(GameState state){
+    public void setState(GameState state) {
         switch (state) {
             case SETTINGS:
                 setScreen(settingsScreen.get());
@@ -83,16 +70,30 @@ public class Main extends com.badlogic.gdx.Game {
             case GAME:
                 setScreen(gameScreen.get());
                 break;
+            case GAME_OVER:
+                setScreen(gameOverScreen.get());
+                break;
         }
     }
 
-    public Prefs getPrefs(){return prefs;}
+    public Prefs getPrefs() {
+        return prefs;
+    }
 
 
 
     public boolean isGameRunning() {
         return gameRunning;
     }
+
+    public boolean getIsGameHost() {
+        return isGameHost;
+    }
+
+    public void setIsGameHost(boolean isGameHost) {
+        this.isGameHost = isGameHost;
+    }
+
 
     public void setGameRunning(boolean gameRunning) {
         this.gameRunning = gameRunning;

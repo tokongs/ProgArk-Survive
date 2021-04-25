@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.common.ConnectionResult;
+import com.mygdx.progarksurvive.di.DependencyRoot;
 
 
 public class AndroidLauncher extends AndroidApplication implements PlayServices{
@@ -62,7 +63,6 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices{
 		if (requestCode == RC_SIGN_IN) {
 			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 			if (result.isSuccess()) {
-				// The signed in account is stored in the result.
 				GoogleSignInAccount signedInAccount = result.getSignInAccount();
 				onConnected(signedInAccount);
 			}

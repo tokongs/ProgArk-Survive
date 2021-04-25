@@ -1,6 +1,7 @@
 package com.mygdx.progarksurvive.networking;
 
 import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
+import com.mygdx.progarksurvive.networking.events.HostNetworkEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Singleton;
@@ -40,6 +41,10 @@ public interface NetworkedGameClient {
      * Set a handler which receives all events from host.
      * @param eventHandler
      */
-    void setEventHandler(UpdateEventHandler<HostUpdateEvent> eventHandler);
+    void setEventHandler(UpdateEventHandler<HostNetworkEvent> eventHandler);
+
+    boolean isActive();
+
+    int getConnectionId();
 
 }
