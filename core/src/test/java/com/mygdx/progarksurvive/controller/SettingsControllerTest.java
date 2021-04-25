@@ -1,13 +1,11 @@
-package controller;
+package com.mygdx.progarksurvive.controller;
 
-import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
 import com.mygdx.progarksurvive.Prefs;
-import com.mygdx.progarksurvive.controller.SettingsController;
 import com.mygdx.progarksurvive.model.SettingsModel;
 
 import org.junit.jupiter.api.AfterEach;
@@ -25,7 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

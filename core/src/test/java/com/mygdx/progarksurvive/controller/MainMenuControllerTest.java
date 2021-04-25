@@ -1,12 +1,10 @@
-package controller;
+package com.mygdx.progarksurvive.controller;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.math.Rectangle;
-import com.esotericsoftware.kryo.Kryo;
 import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
-import com.mygdx.progarksurvive.controller.MainMenuController;
 import com.mygdx.progarksurvive.model.MainMenuModel;
 
 import org.junit.jupiter.api.AfterEach;
@@ -36,6 +34,7 @@ public class MainMenuControllerTest {
     void setup(){
         when(model.getPlayBtnRect()).thenReturn(new Rectangle(0, 0, 100, 100));
         when(model.getSettingsBtnRect()).thenReturn(new Rectangle(100, 100, 100, 100));
+        when(model.getHighscoreRect()).thenReturn(new Rectangle(200, 200, 100, 100));
     }
 
     @AfterEach
@@ -46,7 +45,7 @@ public class MainMenuControllerTest {
     @Test
     public void testClickOutsideButtons(@Mock Main game){
         MainMenuController controller = new MainMenuController(model, game);
-        assertFalse(controller.touchDown(300, 768 - 300, 0,0));
+        assertFalse(controller.touchDown(400, 768 - 400, 0,0));
         verify(game, times(0)).setState(GameState.SETTINGS);
         verify(game, times(0)).setState(GameState.NETWORKING);
     }
@@ -54,8 +53,7 @@ public class MainMenuControllerTest {
     @Test
     public void testClickPlayButton(@Mock Main game){
         MainMenuController controller = new MainMenuController(model, game);
-        assertFalse(controller.touchDown(300, 768 - 300, 0,0));
-        controller.touchDown(20, 768 - 20, 0, 0);
+        assertFalse(controller.touchDown(50, 768 - 50, 0,0));
         verify(game, times(1)).setState(GameState.NETWORKING);
         verify(game, times(0)).setState(GameState.SETTINGS);
     }
@@ -63,8 +61,7 @@ public class MainMenuControllerTest {
     @Test
     public void testClickSettingsButton(@Mock Main game) {
         MainMenuController controller = new MainMenuController(model, game);
-        assertFalse(controller.touchDown(300, 768 - 300, 0,0));
-        controller.touchDown(120, 768 - 120, 0, 0);
+        assertFalse(controller.touchDown(150, 768 - 150, 0,0));
         verify(game, times(0)).setState(GameState.NETWORKING);
         verify(game, times(1)).setState(GameState.SETTINGS);
     }

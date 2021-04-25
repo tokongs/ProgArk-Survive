@@ -1,8 +1,5 @@
-package model;
+package com.mygdx.progarksurvive.model;
 
-import com.mygdx.progarksurvive.model.MainMenuModel;
-
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
