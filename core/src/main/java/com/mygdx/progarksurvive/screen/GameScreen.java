@@ -32,14 +32,12 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera = new OrthographicCamera(1000.0f, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth());
     private final SpriteBatch batch;
     private final BitmapFont font;
-    private final Main game;
     private final Stage stage;
 
     @Inject
-    public GameScreen(GameController controller, GameModel model, Main game, SpriteBatch batch, AssetManager assetManager) {
+    public GameScreen(GameController controller, GameModel model, SpriteBatch batch, AssetManager assetManager) {
         this.controller = controller;
         this.model = model;
-        this.game = game;
         this.batch = batch;
         camera.position.set(camera.viewportWidth / 2.0f, camera.viewportHeight / 2.0f, 0.0f);
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("arial.ttf"));
@@ -58,14 +56,7 @@ public class GameScreen implements Screen {
         Touchpad touchpad = new Touchpad(5, skin);
         table.right().bottom().add(touchpad).size(50, 50).padRight(20).padBottom(20);
 
-        touchpad.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Touchpad touchpad = (Touchpad) actor;
-                Vector2 direction = new Vector2(touchpad.getKnobPercentX(), touchpad.getKnobPercentY());
-                controller.movePlayer(direction);
-            }
-        });
+        touchpad.addListener(controller);
     }
 
     @Override

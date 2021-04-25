@@ -20,6 +20,7 @@ import com.mygdx.progarksurvive.entitysystems.*;
 import com.mygdx.progarksurvive.networking.ClientNetworkHandler;
 import com.mygdx.progarksurvive.networking.NetworkedEntityInfo;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
+import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
@@ -30,19 +31,22 @@ import java.util.*;
 @Singleton
 public class GameModel {
 
-    private final float worldHeight = 1000.0f * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-    private final float worldWidth = 1000.0f;
-    public Player player;
-    public Map<Integer, Player> onlinePlayers = new HashMap<>();
+    public static final float worldHeight = 1000.0f * Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+    public static final float worldWidth = 1000.0f;
+
     private final World world;
     private final Engine ashley;
     private final NetworkedGameHost host;
     private final AssetManager assetManager;
     private final Main game;
+    private final ClientNetworkHandler clientNetworkHandler;
+
+
+    private Player player;
+    public Map<Integer, Player> onlinePlayers = new HashMap<>();
     private int round = 0;
     private boolean initialized = false;
 
-    private final ClientNetworkHandler clientNetworkHandler;
 
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
@@ -167,7 +171,7 @@ public class GameModel {
 
     public void update(float delta) {
         if(!game.getIsGameHost()){
-            clientNetworkHandler.update();
+            clientNetworkHandler.processIncomingUpdateEvents();
         }
         ashley.update(delta);
         if (game.getIsGameHost()) {
@@ -201,6 +205,14 @@ public class GameModel {
             Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
             Enemy enemy = new Enemy(position, new Vector2(20, 20), animationComponent, world);
             ashley.addEntity(enemy.entity);
+        }
+    }
+
+    public void movePlayer(Vector2 direction){
+        if (game.getIsGameHost()) {
+            player.setVelocity(direction);
+        } else {
+            clientNetworkHandler.sendUpdateEvent(new ClientUpdateEvent(direction));
         }
     }
 
