@@ -1,12 +1,17 @@
 package com.mygdx.progarksurvive.model.entitysystems;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.progarksurvive.model.entitycomponents.*;
+import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.progarksurvive.Projectile;
+import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.PlayerComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.TargetingComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,16 +21,14 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
     private final World world;
     private final Engine engine;
-    private final Texture texture;
-
-    private final float bulletVelocity = 1000f;
+    private  final AssetManager assetManager;
 
     @Inject
-    public ShootingSystem(Engine engine, World world, AssetManager assetManager){
+    public ShootingSystem(Engine engine, World world, AssetManager assetManager) {
         super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
-        texture = assetManager.get("images/BulletTexture.png", Texture.class);
+        this.assetManager = assetManager;
     }
 
     @Override
@@ -34,55 +37,22 @@ public class ShootingSystem extends IntervalIteratingSystem {
         PhysicsBodyComponent body = entity.getComponent(PhysicsBodyComponent.class);
 
         // If player is moving, it should not be shooting
-        if(body.body.getLinearVelocity().x != 0 | body.body.getLinearVelocity().y != 0){targeting.target = null;}
+        if (!body.body.getLinearVelocity().isZero()) targeting.target = null;
 
-        if(targeting.target == null) return;
+
+        if (targeting.target == null) return;
 
         Vector2 position = new Vector2(entity.getComponent(PhysicsBodyComponent.class).body.getPosition());
         Vector2 direction = new Vector2(targeting.target.getComponent(PhysicsBodyComponent.class).body.getPosition()).sub(position).limit(1);
 
         // If target is dead, remove target pointer
-        if(targeting.target.getComponent(HealthComponent.class).health < 0){targeting.target = null; return;}
+        if (targeting.target.getComponent(HealthComponent.class).health < 0) {
+            targeting.target = null;
+            return;
+        }
 
-        createProjectile(position, direction, entity);
+        Projectile projectile = new Projectile(position, direction, world, entity, assetManager);
+        engine.addEntity(projectile.entity);
 
     }
-
-    private void createProjectile(Vector2 position, Vector2 direction, Entity shooter){
-        Entity entity = new Entity();
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.fixedRotation = false;
-
-        bodyDef.position.set(position.mulAdd(direction, 5));
-
-
-        Body body = world.createBody(bodyDef);
-
-        PolygonShape shape = new PolygonShape();
-
-        shape.setAsBox(5f / 2, 5f / 2);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 0.0f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.0f;
-
-        body.setUserData(entity);
-        body.createFixture(fixtureDef);
-        body.setLinearVelocity(direction.scl(bulletVelocity));
-        body.setTransform(body.getPosition(), direction.angleDeg(new Vector2(1, 0)));
-        shape.dispose();
-
-        entity.add(new TransformComponent(position,0));
-        entity.add(new CollisionComponent());
-        entity.add(new PhysicsBodyComponent(body));
-        entity.add(new ProjectileComponent(10, shooter));
-        entity.add(new ImageComponent(texture, new Vector2(5, 3)));
-
-        engine.addEntity(entity);
-    }
-    
 }

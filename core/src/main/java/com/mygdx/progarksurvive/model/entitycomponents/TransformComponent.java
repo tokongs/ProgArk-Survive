@@ -9,6 +9,10 @@ public class TransformComponent implements Component {
     public Vector2 position;
     public float rotation;
 
+    public TransformComponent(){
+
+    }
+
     public TransformComponent(Vector2 position, float rotation){
         this.position = position;
         this.rotation = rotation;
