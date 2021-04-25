@@ -23,6 +23,7 @@ public class MainMenuScreen implements Screen {
 
     private Texture playBtnTexture;
     private Texture settingsBtnTexture;
+    private Texture highscoreBtnTexture;
 
     @Inject
     public MainMenuScreen(MainMenuModel mainMenuModel, MainMenuController mainMenuController){
@@ -36,6 +37,7 @@ public class MainMenuScreen implements Screen {
         batch = new SpriteBatch();
         playBtnTexture = new Texture("PLAY_W84_H28.png");
         settingsBtnTexture = new Texture("SETTINGS_W173_H28.png");
+        highscoreBtnTexture = new Texture("HIGHSCORE_W221_H28.png");
 
         Gdx.input.setInputProcessor(controller);
     }
@@ -46,6 +48,7 @@ public class MainMenuScreen implements Screen {
         batch.begin();
         batch.draw(playBtnTexture, model.getPlayBtnPosition().x, model.getPlayBtnPosition().y);
         batch.draw(settingsBtnTexture, model.getSettingBtnPosition().x, model.getSettingBtnPosition().y);
+        batch.draw(highscoreBtnTexture, model.getHighscorePos().x,model.getHighscorePos().y);
         batch.end();
     }
 
@@ -78,5 +81,6 @@ public class MainMenuScreen implements Screen {
         batch.dispose();
         playBtnTexture.dispose();
         settingsBtnTexture.dispose();
+        highscoreBtnTexture.dispose();
     }
 }

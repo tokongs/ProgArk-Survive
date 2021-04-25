@@ -1,3 +1,6 @@
+
+
+
 android {
     sourceCompatibility = 11
 
@@ -21,8 +24,9 @@ android {
         applicationId "com.mygdx.progarksurvive"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
+        multiDexEnabled true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -33,6 +37,10 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    dexOptions {
+        preDexLibraries = false
+        javaMaxHeapSize "4g"
     }
 }
 
@@ -94,4 +102,15 @@ task run(type: Exec) {
     commandLine "$adb", 'shell', 'am', 'start', '-n', 'com.mygdx.progarksurvive./com.mygdx.progarksurvive.AndroidLauncher'
 }
 
+dependencies {
+    implementation 'com.google.firebase:firebase-analytics:18.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.google.firebase:firebase-database:19.7.0'
+    implementation "com.google.android.gms:play-services-base:17.6.0"
+    implementation "com.google.android.gms:play-services-games:21.0.0"
+    implementation "com.google.android.gms:play-services-auth:19.0.0"
+}
+
 eclipse.project.name = appName + "-android"
+
+apply plugin: 'com.google.gms.google-services'

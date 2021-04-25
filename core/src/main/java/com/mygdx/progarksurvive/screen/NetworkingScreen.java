@@ -33,7 +33,6 @@ public class NetworkingScreen implements Screen {
     private final Main game;
     private final Stage stage = new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()));
 
-
     private boolean isHost = true;
 
     private final Label statusLabel;

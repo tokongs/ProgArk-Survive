@@ -29,7 +29,6 @@ public class LoadingScreen implements Screen {
         if(assetManager.update()){
             game.setState(GameState.MAIN_MENU);
         }
-        System.out.printf("loading: %f%%%n", assetManager.getProgress() * 100);
     }
 
     @Override

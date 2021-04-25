@@ -1,6 +1,7 @@
 package com.mygdx.progarksurvive;
 
 import com.mygdx.progarksurvive.screen.*;
+
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -8,9 +9,9 @@ import javax.inject.Singleton;
 
 @Singleton
 public class Main extends com.badlogic.gdx.Game {
-
     private final Prefs prefs;
     private boolean gameRunning = false;
+    public PlayServices playServices;
     private boolean isGameHost = true;
 
     @Inject
@@ -78,6 +79,8 @@ public class Main extends com.badlogic.gdx.Game {
     public Prefs getPrefs() {
         return prefs;
     }
+
+
 
     public boolean isGameRunning() {
         return gameRunning;

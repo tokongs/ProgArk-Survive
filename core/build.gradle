@@ -1,3 +1,5 @@
+
+
 sourceCompatibility = 11
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -37,6 +39,15 @@ jacocoTestReport {
                 ])
             }))
         }
+}
+
+dependencies {
+    implementation 'com.google.firebase:firebase-analytics:18.0.3'
+    implementation platform('com.google.firebase:firebase-bom:27.1.0')
+    implementation 'com.google.firebase:firebase-database:19.7.0'
+    implementation "com.google.android.gms:play-services-base:17.6.0"
+    implementation "com.google.android.gms:play-services-games:21.0.0"
+    implementation "com.google.android.gms:play-services-auth:19.0.0"
 }
 
 

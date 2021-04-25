@@ -5,7 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.progarksurvive.model.EntityType;
+import com.mygdx.progarksurvive.EntityType;
 import com.mygdx.progarksurvive.entitycomponents.*;
 import com.mygdx.progarksurvive.entitycomponents.EntityIdComponent;
 

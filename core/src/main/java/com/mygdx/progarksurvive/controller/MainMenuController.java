@@ -39,12 +39,14 @@ public class MainMenuController implements InputProcessor {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         int y = Gdx.graphics.getHeight() - screenY;
         if(model.getPlayBtnRect().contains(screenX, y)){
-            System.out.println("game screen");
             game.setState(GameState.NETWORKING);
         }
         else if(model.getSettingsBtnRect().contains(screenX, y)){
-            System.out.println("settingscreen");
             game.setState(GameState.SETTINGS);
+        }
+        else if(model.getHighscoreRect().contains(screenX, y)){
+            game.playServices.signIn();
+            game.playServices.showLeaderboard("CgkI84T7-OwUEAIQAQ");
         }
         return false;
     }

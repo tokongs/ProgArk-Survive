@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "302612994469",
+    "project_id": "progark-survie",
+    "storage_bucket": "progark-survie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302612994469:android:ac388117f3653b9eb1f04c",
+        "android_client_info": {
+          "package_name": "com.mygdx.progarksurvive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302612994469-qs0u641t398nbjj84irt7maispj141i2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB45RLmeq-8npvUoAMY5a8nNVc2RCfyCF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302612994469-qs0u641t398nbjj84irt7maispj141i2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

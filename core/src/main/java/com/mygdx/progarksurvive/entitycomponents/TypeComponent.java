@@ -1,7 +1,7 @@
 package com.mygdx.progarksurvive.entitycomponents;
 
 import com.badlogic.ashley.core.Component;
-import com.mygdx.progarksurvive.model.EntityType;
+import com.mygdx.progarksurvive.EntityType;
 
 public class TypeComponent implements Component {
     public EntityType type;
