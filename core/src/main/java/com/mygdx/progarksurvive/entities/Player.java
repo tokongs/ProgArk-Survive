@@ -39,7 +39,7 @@ public class Player {
             textureFilenames.add("images/PlayerTexture" + i + ".png");
         }
         List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
-        return new AnimationComponent(0.3f, textures, 4);
+        return new AnimationComponent(0.05f, textures, 4);
     }
 
     public void setVelocity(Vector2 direction){

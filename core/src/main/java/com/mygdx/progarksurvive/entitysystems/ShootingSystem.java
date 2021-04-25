@@ -37,7 +37,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
         PhysicsBodyComponent body = entity.getComponent(PhysicsBodyComponent.class);
 
         // If player is moving, it should not be shooting
-        if (!body.body.getLinearVelocity().isZero()) targeting.target = null;
+        if (!body.body.getLinearVelocity().isZero(10)) targeting.target = null;
 
 
         if (targeting.target == null) return;
