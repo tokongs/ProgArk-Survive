@@ -19,14 +19,15 @@ import java.util.Map;
 
 @Singleton
 public class ClientNetworkHandler {
-    private int health;
-    private int score;
-    private int round;
-
-    HostUpdateEvent latestHostUpdateEvent;
     private final NetworkedGameClient client;
     private final Engine ashley;
     private final AssetManager assetManager;
+    
+    private int health;
+    private int score;
+    private int round;
+    private HostUpdateEvent latestHostUpdateEvent;
+
 
     @Inject
     public ClientNetworkHandler(NetworkedGameClient client, AssetManager assetManager, Main game, Engine ashley) {

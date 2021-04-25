@@ -34,7 +34,7 @@ public class Enemy {
             textureFilenames.add("images/Zombie1Texture" + i + ".png");
         }
         List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
-        return new AnimationComponent(0.3f, textures, 4);
+        return new AnimationComponent(0.05f, textures, 4);
     }
 
     private Body createBody(Vector2 position, Vector2 size, World world) {

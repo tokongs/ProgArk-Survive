@@ -23,7 +23,7 @@ public class AnimationSystem extends IteratingSystem {
         PhysicsBodyComponent physicsBodyComponent = entity.getComponent(PhysicsBodyComponent.class);
         ImageComponent imageComponent = entity.getComponent(ImageComponent.class);
         AnimationComponent animationcomponent = entity.getComponent(AnimationComponent.class);
-        if(physicsBodyComponent == null || !physicsBodyComponent.body.getLinearVelocity().isZero()){
+        if(physicsBodyComponent == null || !physicsBodyComponent.body.getLinearVelocity().isZero(10)){
             animationcomponent.timePast += deltaTime;
             if(animationcomponent.timePast < animationcomponent.timePerTexture){
                 return;
