@@ -2,31 +2,26 @@ package com.mygdx.progarksurvive;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygdx.progarksurvive.model.entitycomponents.CollisionComponent;
+import com.mygdx.progarksurvive.entitycomponents.CollisionComponent;
 
 
 public class CollisionListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
-        Fixture fixtureA = contact.getFixtureA();
-        Fixture fixtureB = contact.getFixtureB();
-
-        if(!(fixtureA.getBody().getUserData() instanceof Entity || fixtureB.getBody().getUserData() instanceof Entity)) return;
-
-        Entity entityA = (Entity) fixtureA.getBody().getUserData();
-        Entity entityB = (Entity) fixtureB.getBody().getUserData();
-
-        CollisionComponent collisionA = entityA.getComponent(CollisionComponent.class);
-        CollisionComponent collisionB = entityB.getComponent(CollisionComponent.class);
-
-        if(collisionA == null || collisionB == null) return;
-
-        collisionA.collisionEntity = entityB;
-        collisionB.collisionEntity = entityA;
+        updateContact(contact, true);
     }
 
     @Override
     public void endContact(Contact contact) {
+        updateContact(contact, false);
+    }
+
+    /**
+     * Updates the collisionComponent of the two fixtures in the contact.
+     * @param contact A contact object describing the contact
+     * @param begin Whether this is the beginning of a contact,
+     */
+    private void updateContact(Contact contact, boolean begin){
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
 
@@ -38,7 +33,11 @@ public class CollisionListener implements ContactListener {
         CollisionComponent collisionA = entityA.getComponent(CollisionComponent.class);
         CollisionComponent collisionB = entityB.getComponent(CollisionComponent.class);
 
-        if(collisionA.collisionEntity == entityB && collisionB.collisionEntity == entityA){
+        if(begin) {
+            if(collisionA == null || collisionB == null) return;
+            collisionA.collisionEntity = entityB;
+            collisionB.collisionEntity = entityA;
+        } else {
             collisionA.collisionEntity = null;
             collisionB.collisionEntity = null;
         }

@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryo.Kryo;
 import com.mygdx.progarksurvive.model.EntityType;
-import com.mygdx.progarksurvive.model.entitycomponents.*;
+import com.mygdx.progarksurvive.entitycomponents.*;
 import com.mygdx.progarksurvive.networking.NetworkedEntityInfo;
 import com.mygdx.progarksurvive.networking.events.*;
 
