@@ -1,14 +1,17 @@
 package com.mygdx.progarksurvive.model.entitysystems;
 
-import com.badlogic.ashley.core.*;
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IntervalIteratingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.progarksurvive.Projectile;
-import com.mygdx.progarksurvive.model.EntityType;
-import com.mygdx.progarksurvive.model.entitycomponents.*;
+import com.mygdx.progarksurvive.model.entitycomponents.HealthComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.PhysicsBodyComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.PlayerComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.TargetingComponent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,14 +21,14 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
     private final World world;
     private final Engine engine;
-
-    private final float bulletVelocity = 1000f;
+    private  final AssetManager assetManager;
 
     @Inject
-    public ShootingSystem(Engine engine, World world, AssetManager assetManager){
+    public ShootingSystem(Engine engine, World world, AssetManager assetManager) {
         super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
+        this.assetManager = assetManager;
     }
 
     @Override
@@ -34,17 +37,21 @@ public class ShootingSystem extends IntervalIteratingSystem {
         PhysicsBodyComponent body = entity.getComponent(PhysicsBodyComponent.class);
 
         // If player is moving, it should not be shooting
-        if(body.body.getLinearVelocity().x != 0 | body.body.getLinearVelocity().y != 0){targeting.target = null;}
+        if (!body.body.getLinearVelocity().isZero()) targeting.target = null;
 
-        if(targeting.target == null) return;
+
+        if (targeting.target == null) return;
 
         Vector2 position = new Vector2(entity.getComponent(PhysicsBodyComponent.class).body.getPosition());
         Vector2 direction = new Vector2(targeting.target.getComponent(PhysicsBodyComponent.class).body.getPosition()).sub(position).limit(1);
 
         // If target is dead, remove target pointer
-        if(targeting.target.getComponent(HealthComponent.class).health < 0){targeting.target = null; return;}
+        if (targeting.target.getComponent(HealthComponent.class).health < 0) {
+            targeting.target = null;
+            return;
+        }
 
-        Projectile projectile = new Projectile(position, direction, world, entity);
+        Projectile projectile = new Projectile(position, direction, world, entity, assetManager);
         engine.addEntity(projectile.entity);
 
     }

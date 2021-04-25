@@ -30,10 +30,7 @@ public class GameController{
     public void movePlayer(Vector2 direction) {
 
         if (game.getIsGameHost()) {
-            PhysicsBodyComponent physicsBodyComponent = model.player.entity.getComponent(PhysicsBodyComponent.class);
-            physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
-            float newAngle = direction.angleDeg(new Vector2(1,0));
-            physicsBodyComponent.body.setTransform(physicsBodyComponent.body.getPosition(), newAngle);
+            model.player.setVelocity(direction);
         } else {
             client.update(new ClientUpdateEvent(direction));
         }

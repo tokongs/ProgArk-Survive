@@ -7,10 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.model.entitycomponents.AnimationComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.ImageComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.NetworkIdComponent;
-import com.mygdx.progarksurvive.model.entitycomponents.TypeComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
@@ -27,20 +24,20 @@ public class ClientNetworkHandler {
     private int round;
 
     HostUpdateEvent latestHostUpdateEvent;
+    private final NetworkedGameClient client;
     private final Engine ashley;
     private final AssetManager assetManager;
 
     @Inject
     public ClientNetworkHandler(NetworkedGameClient client, AssetManager assetManager, Main game, Engine ashley) {
         this.ashley = ashley;
+        this.client = client;
         this.assetManager = assetManager;
         client.setEventHandler((id, event) -> {
             if (event instanceof HostUpdateEvent) {
                 latestHostUpdateEvent = (HostUpdateEvent) event;
             } else if (event instanceof GameOverEvent) {
                 GameOverEvent e = (GameOverEvent) event;
-                health = e.health.get(id);
-                score = e.score.get(id);
                 round = e.round;
                 game.setState(GameState.GAME_OVER);
                 client.leaveGameSession();
@@ -51,11 +48,11 @@ public class ClientNetworkHandler {
     public void update() {
         if (latestHostUpdateEvent == null) return;
         Map<Long, Entity> entities = new HashMap<>();
-        for (Entity entity : ashley.getEntitiesFor(Family.all(NetworkIdComponent.class).get())) {
-            entities.put(entity.getComponent(NetworkIdComponent.class).getId(), entity);
+        for (Entity entity : ashley.getEntitiesFor(Family.all(EntityIdComponent.class).get())) {
+            entities.put(entity.getComponent(EntityIdComponent.class).getId(), entity);
         }
         latestHostUpdateEvent.entities.forEach(info -> {
-            long entityId = ((NetworkIdComponent) info.components.get(0)).getId();
+            long entityId = ((EntityIdComponent) info.components.get(0)).getId();
             if (!entities.containsKey(entityId)) {
                 Entity newEntity = new Entity();
                 info.components.forEach(newEntity::add);
@@ -76,6 +73,11 @@ public class ClientNetworkHandler {
             } else {
                 Entity entity = entities.get(entityId);
                 info.components.forEach(entity::add);
+                NetworkIdComponent networkId = entity.getComponent(NetworkIdComponent.class);
+                if(networkId != null && networkId.getId() == client.getConnectionId()){
+                    score = entity.getComponent(ScoreComponent.class).score;
+                    health = entity.getComponent(HealthComponent.class).health;
+                }
             }
             entities.remove(entityId);
         });

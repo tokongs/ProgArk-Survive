@@ -25,6 +25,7 @@ public abstract class KryoBase {
      * @param kryo
      */
     public static void registerClasses(Kryo kryo){
+        kryo.register(NetworkIdComponent.class);
         kryo.register(EntityType.class);
         kryo.register(TypeComponent.class);
         kryo.register(Map.class);
@@ -32,7 +33,7 @@ public abstract class KryoBase {
         kryo.register(HostNetworkEvent.class);
         kryo.register(HostUpdateEvent.class);
         kryo.register(Component.class);
-        kryo.register(NetworkIdComponent.class);
+        kryo.register(EntityIdComponent.class);
         kryo.register(TransformComponent.class);
         kryo.register(HealthComponent.class);
         kryo.register(ScoreComponent.class);

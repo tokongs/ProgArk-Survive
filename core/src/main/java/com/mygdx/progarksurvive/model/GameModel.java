@@ -7,7 +7,6 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,7 +15,6 @@ import com.mygdx.progarksurvive.*;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
 import com.mygdx.progarksurvive.model.entitysystems.*;
 import com.mygdx.progarksurvive.networking.NetworkedEntityInfo;
-import com.mygdx.progarksurvive.networking.NetworkedGameClient;
 import com.mygdx.progarksurvive.networking.NetworkedGameHost;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
@@ -24,7 +22,6 @@ import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Singleton
 public class GameModel {
@@ -41,7 +38,7 @@ public class GameModel {
     private int round = 0;
     private boolean initialized = false;
 
-    private ClientNetworkHandler clientNetworkHandler;
+    private final ClientNetworkHandler clientNetworkHandler;
 
     @Inject
     public GameModel(Engine ashley, AssetManager assetManager, ProjectileImpactSystem projectileImpactSystem,
@@ -67,8 +64,7 @@ public class GameModel {
 
         if (game.getIsGameHost()) {
             host.setEventHandler((id, event) -> {
-                PhysicsBodyComponent physicsBodyComponent = onlinePlayers.get(id).entity.getComponent(PhysicsBodyComponent.class);
-                physicsBodyComponent.body.setLinearVelocity(event.direction.scl(100));
+                onlinePlayers.get(id).setVelocity(event.direction);
             });
             initialize();
 
@@ -126,10 +122,10 @@ public class GameModel {
 
     public void initialize() {
 
-        player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world);
+        player = new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world, -1);
 
         if (game.getIsGameHost()) {
-            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world)));
+            host.getConnectionIds().forEach(id -> onlinePlayers.put(id, new Player(new Vector2(300, 300), new Vector2(50, 50), assetManager, world, id)));
             onlinePlayers.forEach((id, player) -> ashley.addEntity(player.entity));
         }
 
@@ -144,6 +140,7 @@ public class GameModel {
 
         for (Entity e : ashley.getEntitiesFor(Family.all(PlayerComponent.class).get())) {
             networkedEntities.add(new NetworkedEntityInfo(new ArrayList<>(Arrays.asList(
+                    e.getComponent(EntityIdComponent.class),
                     e.getComponent(NetworkIdComponent.class),
                     e.getComponent(TransformComponent.class),
                     e.getComponent(TypeComponent.class),
@@ -154,7 +151,7 @@ public class GameModel {
 
         for (Entity e : ashley.getEntitiesFor(Family.one(EnemyComponent.class, ProjectileComponent.class).all(PhysicsBodyComponent.class).get())) {
             networkedEntities.add(new NetworkedEntityInfo(new ArrayList<>(Arrays.asList(
-                    e.getComponent(NetworkIdComponent.class),
+                    e.getComponent(EntityIdComponent.class),
                     e.getComponent(TypeComponent.class),
                     e.getComponent(TransformComponent.class)
             ))));
@@ -180,20 +177,12 @@ public class GameModel {
             }
 
             broadCastUpdateEvent();
-            Map<Integer, Integer> playerHealth = new HashMap<>();
-            Map<Integer, Integer> playerScore = new HashMap<>();
-            boolean deadPlayers = false;
-            for (Integer id : onlinePlayers.keySet()) {
-                Entity entity = onlinePlayers.get(id).entity;
-                int health = entity.getComponent(HealthComponent.class).health;
-                if (health <= 0) {
-                    deadPlayers = true;
-                }
-                playerHealth.put(id, health);
-                playerScore.put(id, entity.getComponent(ScoreComponent.class).score);
-            }
-            if (deadPlayers || player.entity.getComponent(HealthComponent.class).health <= 0) {
-                host.update(new GameOverEvent(round, playerScore, playerHealth));
+
+            boolean deadPlayers = player.entity.getComponent(HealthComponent.class).health <= 0 ||
+                    onlinePlayers.values().stream().anyMatch(player -> player.entity.getComponent(HealthComponent.class).health <= 0);
+
+            if (deadPlayers) {
+                host.update(new GameOverEvent(round));
                 gameOver();
             }
         }

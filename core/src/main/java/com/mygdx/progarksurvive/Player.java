@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygdx.progarksurvive.model.EntityType;
 import com.mygdx.progarksurvive.model.entitycomponents.*;
-import com.mygdx.progarksurvive.model.entitycomponents.NetworkIdComponent;
+import com.mygdx.progarksurvive.model.entitycomponents.EntityIdComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,10 @@ public class Player {
 
     public Entity entity = new Entity();
 
-    public Player(Vector2 position, Vector2 size, AssetManager assetManager, World world){
+    public Player(Vector2 position, Vector2 size, AssetManager assetManager, World world, int networkId){
         AnimationComponent animationComponent = createAnimationComponent(assetManager);
-        entity.add(new NetworkIdComponent());
+        entity.add(new EntityIdComponent());
+        entity.add(new NetworkIdComponent(networkId));
         entity.add(new TypeComponent(EntityType.PLAYER));
         entity.add(new PlayerComponent());
         entity.add(new TransformComponent(position, 0));
@@ -39,6 +40,13 @@ public class Player {
         }
         List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
         return new AnimationComponent(0.3f, textures, 4);
+    }
+
+    public void setVelocity(Vector2 direction){
+        PhysicsBodyComponent physicsBodyComponent = entity.getComponent(PhysicsBodyComponent.class);
+        physicsBodyComponent.body.setLinearVelocity(direction.scl(100));
+        float newAngle = direction.angleDeg(new Vector2(1,0));
+        physicsBodyComponent.body.setTransform(physicsBodyComponent.body.getPosition(), newAngle);
     }
 
     private Body createBody(Vector2 position, Vector2 size, World world){

@@ -45,4 +45,6 @@ public interface NetworkedGameClient {
 
     boolean isActive();
 
+    int getConnectionId();
+
 }

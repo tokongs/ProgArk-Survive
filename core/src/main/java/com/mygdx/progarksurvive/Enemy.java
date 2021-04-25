@@ -16,7 +16,7 @@ public class Enemy {
     public Entity entity = new Entity();
 
     public Enemy(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world) {
-        entity.add(new NetworkIdComponent());
+        entity.add(new EntityIdComponent());
         entity.add(new TypeComponent(EntityType.ENEMY));
         entity.add(new EnemyComponent());
         entity.add(new TransformComponent(position, 0));
@@ -52,9 +52,9 @@ public class Enemy {
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 1.0f;
+        fixtureDef.density = 0.0f;
         fixtureDef.friction = 0.0f;
-        fixtureDef.restitution = 0.0f;
+        fixtureDef.restitution = 0.9f;
 
         body.setUserData(entity);
         body.createFixture(fixtureDef);

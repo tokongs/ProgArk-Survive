@@ -68,6 +68,11 @@ public class KryoNetworkedGameClient extends KryoBase implements NetworkedGameCl
     }
 
     @Override
+    public int getConnectionId() {
+        return client.getID();
+    }
+
+    @Override
     public Map<String, InetAddress> findGameSessions() {
         discoveryHandler.reset();
         client.discoverHosts(UDP_PORT, 5000);
