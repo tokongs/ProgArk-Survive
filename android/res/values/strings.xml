@@ -2,4 +2,5 @@
 <resources>
 
     <string name="app_name">Progark Survive</string>
+    <string name="signin_other_error">YOLO</string>
 </resources>

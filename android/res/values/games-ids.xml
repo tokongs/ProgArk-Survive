@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--app_id-->
-    <string name="app_id" translatable="false">302612994469</string>
-    <!--package_name-->
-    <string name="package_name" translatable="false">com.mygdx.progarksurvive</string>
-    <!--leaderboard Highscore-->
-    <string name="leaderboard_highscore" translatable="false">CgkIpbOPqecIEAIQAQ</string>
-</resources>
