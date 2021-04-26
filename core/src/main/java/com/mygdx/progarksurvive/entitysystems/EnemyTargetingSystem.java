@@ -28,8 +28,8 @@ public class EnemyTargetingSystem extends IteratingSystem {
         ImmutableArray<Entity> players = ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get());
         float minDistance = Float.MAX_VALUE;
         for (Entity player: players) {
-            Vector2 enemyPosition = new Vector2(player.getComponent(PhysicsBodyComponent.class).body.getPosition());
-            float distance = position.dst(enemyPosition);
+            Vector2 playerPosition = new Vector2(player.getComponent(PhysicsBodyComponent.class).body.getPosition());
+            float distance = position.dst(playerPosition);
             if(distance < minDistance){
                 entity.getComponent(TargetingComponent.class).target = player;
                 minDistance = distance;

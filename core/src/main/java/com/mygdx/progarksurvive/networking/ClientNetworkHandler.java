@@ -11,6 +11,7 @@ import com.mygdx.progarksurvive.entities.Enemy;
 import com.mygdx.progarksurvive.entities.Player;
 import com.mygdx.progarksurvive.entities.Projectile;
 import com.mygdx.progarksurvive.entitycomponents.*;
+import com.mygdx.progarksurvive.networking.events.ClientUpdateEvent;
 import com.mygdx.progarksurvive.networking.events.GameOverEvent;
 import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
@@ -30,7 +31,6 @@ public class ClientNetworkHandler {
     private int round;
     private HostUpdateEvent latestHostUpdateEvent;
 
-
     @Inject
     public ClientNetworkHandler(NetworkedGameClient client, AssetManager assetManager, Main game, Engine ashley) {
         this.ashley = ashley;
@@ -48,7 +48,7 @@ public class ClientNetworkHandler {
         });
     }
 
-    public void update() {
+    public void processIncomingUpdateEvents() {
         if (latestHostUpdateEvent == null) return;
         Map<Long, Entity> entities = new HashMap<>();
         for (Entity entity : ashley.getEntitiesFor(Family.all(EntityIdComponent.class).get())) {
@@ -86,6 +86,10 @@ public class ClientNetworkHandler {
         });
 
         entities.forEach((aLong, entity) -> ashley.removeEntity(entity));
+    }
+
+    public void sendUpdateEvent(ClientUpdateEvent event){
+        client.update(event);
     }
 
     public int getHealth() {
