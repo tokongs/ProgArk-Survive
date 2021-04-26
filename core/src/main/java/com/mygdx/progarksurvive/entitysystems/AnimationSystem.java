@@ -8,7 +8,9 @@ import com.mygdx.progarksurvive.entitycomponents.ImageComponent;
 import com.mygdx.progarksurvive.entitycomponents.PhysicsBodyComponent;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class AnimationSystem extends IteratingSystem {
 
 

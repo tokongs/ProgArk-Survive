@@ -6,7 +6,9 @@ import com.mygdx.progarksurvive.GameState;
 import com.mygdx.progarksurvive.Main;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class LoadingScreen implements Screen {
 
 
