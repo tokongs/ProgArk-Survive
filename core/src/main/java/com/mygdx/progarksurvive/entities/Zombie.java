@@ -12,20 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Enemy {
+public class Zombie {
     public Entity entity = new Entity();
 
-    public Enemy(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world) {
+    public Zombie(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world) {
         entity.add(new EntityIdComponent());
-        entity.add(new TypeComponent(EntityType.ENEMY));
+        entity.add(new TypeComponent(EntityType.ZOMBIE));
         entity.add(new EnemyComponent());
         entity.add(new TransformComponent(position, 0));
         entity.add(new ImageComponent(animationComponent.textures.get(animationComponent.defaultTexture), size));
-        entity.add(new HealthComponent(20));
         entity.add(new CollisionComponent());
         entity.add(new TargetingComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
         entity.add(animationComponent);
+        entity.add(new HealthComponent(20));
     }
 
     public static AnimationComponent createAnimationComponent(AssetManager assetManager) {

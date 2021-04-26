@@ -7,7 +7,8 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.entities.Enemy;
+import com.mygdx.progarksurvive.entities.TabascoFlask;
+import com.mygdx.progarksurvive.entities.Zombie;
 import com.mygdx.progarksurvive.entities.Player;
 import com.mygdx.progarksurvive.entities.Projectile;
 import com.mygdx.progarksurvive.entitycomponents.*;
@@ -17,6 +18,8 @@ import com.mygdx.progarksurvive.networking.events.HostUpdateEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import java.awt.Image;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,13 +67,16 @@ public class ClientNetworkHandler {
                         newEntity.add(Player.createAnimationComponent(assetManager));
                         newEntity.add(new ImageComponent(Color.RED, new Vector2(50, 50)));
                         break;
-                    case ENEMY:
-                        newEntity.add(Enemy.createAnimationComponent(assetManager));
+                    case ZOMBIE:
+                        newEntity.add(Zombie.createAnimationComponent(assetManager));
                         newEntity.add(new ImageComponent(Color.RED, new Vector2(20, 20)));
                         break;
                     case PROJECTILE:
                         newEntity.add(Projectile.createImageComponent(assetManager));
                         break;
+                    case TABASCOFLASK:
+                        newEntity.add(TabascoFlask.createAnimationComponent(assetManager));
+                        newEntity.add(new ImageComponent(Color.RED, new Vector2(7,21)));
                 }
                 ashley.addEntity(newEntity);
             } else {
