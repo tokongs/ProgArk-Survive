@@ -12,7 +12,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.entities.Enemy;
+import com.mygdx.progarksurvive.entities.TabascoFlask;
+import com.mygdx.progarksurvive.entities.Zombie;
 import com.mygdx.progarksurvive.entities.Player;
 import com.mygdx.progarksurvive.entities.Wall;
 import com.mygdx.progarksurvive.entitycomponents.*;
@@ -201,10 +202,19 @@ public class GameModel {
     public void initializeGameRound(int numEnemies) {
         Random rand = new Random();
         for (int i = 0; i < numEnemies; i++) {
-            AnimationComponent animationComponent = Enemy.createAnimationComponent(assetManager);
-            Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
-            Enemy enemy = new Enemy(position, new Vector2(20, 20), animationComponent, world);
-            ashley.addEntity(enemy.entity);
+            int enemytype = rand.nextInt(2);
+            if(enemytype == 0) {
+                AnimationComponent animationComponent = Zombie.createAnimationComponent(assetManager);
+                Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
+                Zombie enemy = new Zombie(position, new Vector2(20, 20), animationComponent, world);
+                ashley.addEntity(enemy.entity);
+            }
+            else if(enemytype == 1){
+                AnimationComponent animationComponent = TabascoFlask.createAnimationComponent(assetManager);
+                Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
+                TabascoFlask enemy = new TabascoFlask(position, new Vector2(7, 21), animationComponent, world);
+                ashley.addEntity(enemy.entity);
+            }
         }
     }
 

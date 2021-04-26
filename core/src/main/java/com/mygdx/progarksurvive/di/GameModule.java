@@ -57,6 +57,9 @@ public interface GameModule {
             assetManager.load("images/PlayerTexture" + i + ".png", Texture.class);
             assetManager.load("images/Zombie1Texture" + i + ".png", Texture.class);
         }
+        for(int i = 1; i <= 8; i++){
+            assetManager.load("images/Tabascoflask" + i + ".jpg", Texture.class);
+        }
         assetManager.load("images/BulletTexture.png", Texture.class);
         assetManager.load("skin/uiskin.json", Skin.class);
         return assetManager;
