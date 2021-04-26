@@ -26,21 +26,13 @@ public class HealthSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         HealthComponent hm = entity.getComponent(HealthComponent.class);
-
-        // If dead, remove entity from the world and ashley engine
-        // Should probably be enemy specific here, then handle players another way
         if(hm.health <= 0){
             PhysicsBodyComponent phc = entity.getComponent(PhysicsBodyComponent.class);
             EnemyComponent enemyComponent = entity.getComponent(EnemyComponent.class);
-            PlayerComponent playerComponent = entity.getComponent(PlayerComponent.class);
             if(enemyComponent != null) {
                 engine.removeEntity(entity);
                 world.destroyBody(phc.body);
-
-            } else if(playerComponent != null) {
-                // Game over
             }
-
         }
     }
 }
