@@ -9,7 +9,9 @@ import com.mygdx.progarksurvive.entitycomponents.PhysicsBodyComponent;
 import com.mygdx.progarksurvive.entitycomponents.TransformComponent;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class TransformSystem extends IteratingSystem {
     @Inject
     public TransformSystem(){
