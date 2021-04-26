@@ -61,4 +61,25 @@ class AnimationSystemTest {
         assertEquals(animationComponent.textureIndex, 1);
         assertEquals(imageComponent.sprite.getTexture(), texture2);
     }
+
+    @Test
+    void testProcessEntityWithoutBody(@Mock Entity entity, @Mock Texture texture1, @Mock Texture texture2) {
+        AnimationComponent animationComponent = new AnimationComponent(0.5f, Arrays.asList(texture1, texture2), 0);
+        ImageComponent imageComponent = new ImageComponent(texture1, new Vector2(10, 10));
+
+        when(entity.getComponent(AnimationComponent.class)).thenReturn(animationComponent);
+        when(entity.getComponent(ImageComponent.class)).thenReturn(imageComponent);
+        when(entity.getComponent(PhysicsBodyComponent.class)).thenReturn(null);
+
+        AnimationSystem animationSystem = new AnimationSystem();
+        animationSystem.processEntity(entity, 0.2f);
+        assertEquals(animationComponent.timePast, 0.2f);
+        assertEquals(animationComponent.textureIndex, 0);
+        assertEquals(imageComponent.sprite.getTexture(), texture1);
+
+        animationSystem.processEntity(entity, 0.4f);
+        assertEquals(animationComponent.timePast, 0.0f);
+        assertEquals(animationComponent.textureIndex, 1);
+        assertEquals(imageComponent.sprite.getTexture(), texture2);
+    }
 }
