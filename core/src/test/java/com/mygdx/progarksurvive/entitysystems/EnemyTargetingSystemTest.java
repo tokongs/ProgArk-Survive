@@ -23,25 +23,29 @@ import static org.mockito.Mockito.*;
 class EnemyTargetingSystemTest {
 
     @Test
-    void processEntity(@Mock Engine ashley,
-                       @Mock Entity enemy,
-                       @Mock Entity player1,
-                       @Mock Entity player2,
-                       @Mock Body enemyBody,
-                       @Mock Body player1Body,
-                       @Mock Body player2Body) {
-        Entity[] playerArray = new Entity[]{player1, player2};
+    void testProcessEntity(@Mock Engine ashley,
+                           @Mock Entity enemy,
+                           @Mock Entity player1,
+                           @Mock Entity player2,
+                           @Mock Entity player3,
+                           @Mock Body enemyBody,
+                           @Mock Body player1Body,
+                           @Mock Body player2Body,
+                           @Mock Body player3Body) {
+        Entity[] playerArray = new Entity[]{player1, player2, player3};
         when(ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())).thenReturn(new ImmutableArray<>(new Array<>(playerArray)));
 
         when(enemyBody.getPosition()).thenReturn(new Vector2(0, 0));
         when(player1Body.getPosition()).thenReturn(new Vector2(2, 0));
         when(player2Body.getPosition()).thenReturn(new Vector2(0, 1));
+        when(player3Body.getPosition()).thenReturn(new Vector2(3, 1));
         TargetingComponent targetingComponent = new TargetingComponent();
         when(enemy.getComponent(TargetingComponent.class)).thenReturn(targetingComponent);
 
         when(enemy.getComponent(PhysicsBodyComponent.class)).thenReturn(new PhysicsBodyComponent(enemyBody));
         when(player1.getComponent(PhysicsBodyComponent.class)).thenReturn(new PhysicsBodyComponent(player1Body));
         when(player2.getComponent(PhysicsBodyComponent.class)).thenReturn(new PhysicsBodyComponent(player2Body));
+        when(player3.getComponent(PhysicsBodyComponent.class)).thenReturn(new PhysicsBodyComponent(player3Body));
 
         EnemyTargetingSystem enemyTargetingSystem = new EnemyTargetingSystem(ashley);
         enemyTargetingSystem.processEntity(enemy, 0.1f);
@@ -52,8 +56,8 @@ class EnemyTargetingSystemTest {
 
     @Test
     void testProcessEntityNoPlayers(@Mock Engine ashley,
-                       @Mock Entity enemy,
-                       @Mock Body enemyBody){
+                                    @Mock Entity enemy,
+                                    @Mock Body enemyBody) {
         when(ashley.getEntitiesFor(Family.all(PlayerComponent.class, PhysicsBodyComponent.class).get())).thenReturn(new ImmutableArray<>(new Array<>()));
 
         when(enemyBody.getPosition()).thenReturn(new Vector2(0, 0));
