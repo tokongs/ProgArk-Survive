@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -33,6 +34,7 @@ public class GameScreen implements Screen {
     private final SpriteBatch batch;
     private final BitmapFont font;
     private final Stage stage;
+    private final Texture upgrade;
 
     @Inject
     public GameScreen(GameController controller, GameModel model, SpriteBatch batch, AssetManager assetManager) {
@@ -45,7 +47,7 @@ public class GameScreen implements Screen {
         parameter.size = 40;
         font = generator.generateFont(parameter);
         generator.dispose();
-
+        upgrade = assetManager.get("images/upgrade.png", Texture.class);
         Skin skin = assetManager.get("skin/uiskin.json", Skin.class);
 
         stage = new Stage(new StretchViewport(800.0f, 800.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth()), batch);
@@ -77,6 +79,9 @@ public class GameScreen implements Screen {
         font.draw(batch, String.valueOf(model.getPlayerScore()), 12, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 12);
         font.setColor(Color.RED);
         font.draw(batch, String.valueOf(model.getPlayerHealth() / 100f), 890, 1000.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 12);
+        if(model.canDrawUpgrade()){
+            batch.draw(upgrade, 40, 50.0f * (Gdx.graphics.getHeight()) / Gdx.graphics.getWidth() - 12);
+        }
         batch.end();
         stage.act();
         stage.draw();

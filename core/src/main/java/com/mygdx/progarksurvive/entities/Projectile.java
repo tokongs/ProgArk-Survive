@@ -12,7 +12,7 @@ public class Projectile {
     public Entity entity = new Entity();
     private final float bulletVelocity = 1000f;
 
-    public Projectile(Vector2 position, Vector2 direction, World world, Entity shooter, AssetManager assetManager){
+    public Projectile(Vector2 position, Vector2 direction, World world, Entity shooter, AssetManager assetManager, int damage, int speed){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.fixedRotation = false;
@@ -34,7 +34,7 @@ public class Projectile {
 
         body.setUserData(entity);
         body.createFixture(fixtureDef);
-        body.setLinearVelocity(direction.scl(bulletVelocity));
+        body.setLinearVelocity(direction.scl(bulletVelocity+speed));
         body.setTransform(body.getPosition(), direction.angleDeg(new Vector2(1, 0)));
         shape.dispose();
 
@@ -44,7 +44,7 @@ public class Projectile {
         entity.add(new CollisionComponent());
         entity.add(new PhysicsBodyComponent(body));
         entity.add(createImageComponent(assetManager));
-        entity.add(new ProjectileComponent(10, shooter));
+        entity.add(new ProjectileComponent(damage, shooter));
     }
 
     public static ImageComponent createImageComponent(AssetManager assetManager){

@@ -8,6 +8,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygdx.progarksurvive.entities.Projectile;
+import com.mygdx.progarksurvive.entitycomponents.DamageComponent;
 import com.mygdx.progarksurvive.entitycomponents.HealthComponent;
 import com.mygdx.progarksurvive.entitycomponents.PhysicsBodyComponent;
 import com.mygdx.progarksurvive.entitycomponents.PlayerComponent;
@@ -25,7 +26,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
 
     @Inject
     public ShootingSystem(Engine engine, World world, AssetManager assetManager) {
-        super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class).get(), 0.2f);
+        super(Family.all(PlayerComponent.class, TargetingComponent.class, PhysicsBodyComponent.class, DamageComponent.class).get(), 0.2f);
         this.world = world;
         this.engine = engine;
         this.assetManager = assetManager;
@@ -35,7 +36,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
     protected void processEntity(Entity entity) {
         TargetingComponent targeting = entity.getComponent(TargetingComponent.class);
         PhysicsBodyComponent body = entity.getComponent(PhysicsBodyComponent.class);
-
+        DamageComponent dc = entity.getComponent(DamageComponent.class);
         // If player is moving, it should not be shooting
         if (!body.body.getLinearVelocity().isZero(10)) targeting.target = null;
 
@@ -51,7 +52,7 @@ public class ShootingSystem extends IntervalIteratingSystem {
             return;
         }
 
-        Projectile projectile = new Projectile(position, direction, world, entity, assetManager);
+        Projectile projectile = new Projectile(position, direction, world, entity, assetManager, dc.damage, dc.speed);
         engine.addEntity(projectile.entity);
 
     }

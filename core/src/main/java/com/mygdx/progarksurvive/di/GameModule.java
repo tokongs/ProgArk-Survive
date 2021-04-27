@@ -62,6 +62,7 @@ public interface GameModule {
         }
         assetManager.load("images/BulletTexture.png", Texture.class);
         assetManager.load("skin/uiskin.json", Skin.class);
+        assetManager.load("images/upgrade.png", Texture.class);
         return assetManager;
     }
 

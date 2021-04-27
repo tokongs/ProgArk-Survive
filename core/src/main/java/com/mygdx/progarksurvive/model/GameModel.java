@@ -7,6 +7,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
@@ -47,6 +48,8 @@ public class GameModel {
     public Map<Integer, Player> onlinePlayers = new HashMap<>();
     private int round = 0;
     private boolean initialized = false;
+    private float deltaUpgrade = 4f;
+    private int damage = 10;
 
 
     @Inject
@@ -173,6 +176,12 @@ public class GameModel {
     public void update(float delta) {
         if(!game.getIsGameHost()){
             clientNetworkHandler.processIncomingUpdateEvents();
+            if(initialized){
+                if(this.damage != player.entity.getComponent(DamageComponent.class).damage){
+                    this.deltaUpgrade = 0f;
+                    this.damage = player.entity.getComponent(DamageComponent.class).damage;
+                }
+            }
         }
         ashley.update(delta);
         if (game.getIsGameHost()) {
@@ -183,6 +192,23 @@ public class GameModel {
             ImmutableArray<Entity> enemies = ashley.getEntitiesFor(Family.all(EnemyComponent.class).get());
             if (enemies.size() == 0) {
                 round += 1;
+
+                // Øk damage med en viss sannsynlighet
+                Random random = new Random();
+                if(random.nextInt(3) == 0 && !canDrawUpgrade() && getRound() > 1){
+                    // Select a player
+                    int index = random.nextInt(1+onlinePlayers.size());
+                    if (index == onlinePlayers.size()){
+                        player.entity.getComponent(DamageComponent.class).damage += 5;
+                        deltaUpgrade = 0f;
+                    }
+                    else{
+                        List list = new ArrayList(onlinePlayers.keySet());
+                        onlinePlayers.get(list.get(index)).entity.getComponent(DamageComponent.class).damage += 5;
+                        System.out.println("Client got it!!!!!!!!!!");
+                    }
+                }
+
                 initializeGameRound(9 + round);
             }
 
@@ -196,6 +222,7 @@ public class GameModel {
                 gameOver();
             }
         }
+        deltaUpgrade += delta;
         world.step(1 / 60f, 6, 2);
     }
 
@@ -238,6 +265,10 @@ public class GameModel {
             return player.entity.getComponent(HealthComponent.class).health;
         }
         return clientNetworkHandler.getHealth();
+    }
+
+    public boolean canDrawUpgrade(){
+        return this.deltaUpgrade < 3f;
     }
 
     public int getRound() {

@@ -31,6 +31,7 @@ public class Player {
         entity.add(new ScoreComponent());
         entity.add(new PhysicsBodyComponent(createBody(position, size, world)));
         entity.add(animationComponent);
+        entity.add(new DamageComponent(10,0));
     }
 
     public static AnimationComponent createAnimationComponent(AssetManager assetManager){
