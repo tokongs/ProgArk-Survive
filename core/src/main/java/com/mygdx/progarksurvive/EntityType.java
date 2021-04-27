@@ -1,5 +1,5 @@
 package com.mygdx.progarksurvive;
 
 public enum EntityType {
-    PLAYER, ENEMY, WALL, PROJECTILE, ZOMBIE, TABASCOFLASK
+    PLAYER, CRAWLER, WALL, PROJECTILE, ZOMBIE
 }

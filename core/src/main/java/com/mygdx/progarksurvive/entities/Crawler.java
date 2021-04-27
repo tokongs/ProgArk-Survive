@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TabascoFlask {
+public class Crawler {
     public Entity entity = new Entity();
 
-    public TabascoFlask(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world){
+    public Crawler(Vector2 position, Vector2 size, AnimationComponent animationComponent, World world){
         entity.add(new EntityIdComponent());
-        entity.add(new TypeComponent(EntityType.TABASCOFLASK));
+        entity.add(new TypeComponent(EntityType.CRAWLER));
         entity.add(new EnemyComponent());
         entity.add(new TransformComponent(position, 0));
         entity.add(new ImageComponent(animationComponent.textures.get(animationComponent.defaultTexture), size));
@@ -43,8 +43,8 @@ public class TabascoFlask {
 
     public static AnimationComponent createAnimationComponent(AssetManager assetManager) {
         List<String> textureFilenames = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            textureFilenames.add("images/Tabascoflask" + i + ".jpg");
+        for (int i = 1; i <= 6; i++) {
+            textureFilenames.add("images/Crawler" + i + ".png");
         }
         List<Texture> textures = textureFilenames.stream().map(filename -> assetManager.get(filename, Texture.class)).collect(Collectors.toList());
         return new AnimationComponent(0.05f, textures, 4);
