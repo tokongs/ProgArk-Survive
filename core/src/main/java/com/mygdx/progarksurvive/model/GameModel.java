@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.progarksurvive.*;
-import com.mygdx.progarksurvive.entities.TabascoFlask;
+import com.mygdx.progarksurvive.entities.Crawler;
 import com.mygdx.progarksurvive.entities.Zombie;
 import com.mygdx.progarksurvive.entities.Player;
 import com.mygdx.progarksurvive.entities.Wall;
@@ -210,9 +210,9 @@ public class GameModel {
                 ashley.addEntity(enemy.entity);
             }
             else if(enemytype == 1){
-                AnimationComponent animationComponent = TabascoFlask.createAnimationComponent(assetManager);
+                AnimationComponent animationComponent = Crawler.createAnimationComponent(assetManager);
                 Vector2 position = new Vector2(rand.nextInt((int) worldWidth - 40) + 20, rand.nextInt((int) worldHeight - 40) + 20);
-                TabascoFlask enemy = new TabascoFlask(position, new Vector2(7, 21), animationComponent, world);
+                Crawler enemy = new Crawler(position, new Vector2(53, 20), animationComponent, world);
                 ashley.addEntity(enemy.entity);
             }
         }
