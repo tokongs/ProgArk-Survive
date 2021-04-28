@@ -124,7 +124,7 @@ public class GameModel {
         initialized = false;
         game.setState(GameState.GAME_OVER);
         onlinePlayers.clear();
-        game.playServices.submitScore("CgkI84T7-OwUEAIQAQ", getPlayerScore());
+        game.playServices.submitScore("CgkIpbOPqecIEAIQAQ", getPlayerScore());
         if (host.isActive()) {
             host.stopGameSession();
         }

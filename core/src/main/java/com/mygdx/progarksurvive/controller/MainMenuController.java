@@ -46,7 +46,7 @@ public class MainMenuController implements InputProcessor {
         }
         else if(model.getHighscoreRect().contains(screenX, y)){
             game.playServices.signIn();
-            game.playServices.showLeaderboard("CgkI84T7-OwUEAIQAQ");
+            game.playServices.showLeaderboard("CgkIpbOPqecIEAIQAQ");
         }
         return false;
     }
