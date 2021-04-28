@@ -63,8 +63,7 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices{
 		if (requestCode == RC_SIGN_IN) {
 			GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 			if (result.isSuccess()) {
-				GoogleSignInAccount signedInAccount = result.getSignInAccount();
-				onConnected(signedInAccount);
+				onConnected();
 			}
 			else {
 
@@ -78,16 +77,11 @@ public class AndroidLauncher extends AndroidApplication implements PlayServices{
 			}
 		}
 	}
-	private void onConnected(GoogleSignInAccount googleSignInAccount) {
+	private void onConnected() {
 		Log.d(TAG, "onConnected(): connected to Google APIs");
-
-		mLeaderboardsClient = Games.getLeaderboardsClient(this, googleSignInAccount);
-
-
 	}
 	private void onDisconnected() {
 		Log.d(TAG, "onDisconnected()");
-		mLeaderboardsClient = null;
 	}
 
 	@Override

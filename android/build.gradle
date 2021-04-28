@@ -6,6 +6,7 @@ android {
 
     buildToolsVersion "30.0.3"
     compileSdkVersion 30
+    ndkVersion '23.0.7272597'
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -24,8 +25,8 @@ android {
         applicationId "com.mygdx.progarksurvive"
         minSdkVersion 26
         targetSdkVersion 30
-        versionCode 2
-        versionName "1.1"
+        versionCode 11
+        versionName "1.2.8   "
         multiDexEnabled true
     }
     compileOptions {
@@ -34,8 +35,10 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
     dexOptions {
@@ -114,3 +117,4 @@ dependencies {
 eclipse.project.name = appName + "-android"
 
 apply plugin: 'com.google.gms.google-services'
+android.defaultConfig.ndk.debugSymbolLevel = 'SYMBOL_TABLE'
